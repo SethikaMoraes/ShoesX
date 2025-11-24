@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShoesX - Product Details">
+  <title>Product Details - ShoesX</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Set theme immediately to prevent flash
+    (function() {
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'light');
+      }
+      const theme = localStorage.getItem('theme');
+      const htmlElement = document.documentElement;
+      htmlElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+      } else {
+        htmlElement.classList.remove('dark');
+      }
+      if (document.body) {
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        } else {
+          document.body.classList.remove('dark');
+        }
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        });
+      }
+    })();
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-[Space_Grotesk]">
+  <!-- Navbar -->
+  <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-slate-50/95 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-700 overflow-hidden" role="banner">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between" role="navigation" aria-label="Main navigation">
+      <!-- Logo and Brand -->
+      <a href="index.html" class="flex items-center gap-0 flex-shrink-0">
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
+      </a>
+      
+      <!-- Centered Navigation Links -->
+      <div class="hidden lg:flex items-center gap-6 text-base font-medium flex-1 justify-center" role="menubar">
+        <a href="index.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Home</a>
+        <a href="products.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Shop</a>
+        <a href="index.html#fit" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Fit Assurance</a>
+        <a href="index.html#viewer" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">3D View</a>
+      </div>
+      
+      <!-- Right Side Actions -->
+      <div class="hidden lg:flex items-center gap-3 flex-shrink-0">
+        <button id="theme-toggle" class="w-11 h-11 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all" aria-label="Toggle dark mode">
+          <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+        <button data-action="signin" class="btn-secondary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+        <button data-action="signup" class="btn-primary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        <div id="user-menu" class="hidden flex items-center gap-2">
+          <a href="profile.html" class="text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-2 py-1" id="user-name"></a>
+          <button id="signout-btn" class="btn-secondary px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
+      </div>
+      <button id="menu-toggle" class="lg:hidden w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4" role="menu" aria-label="Mobile navigation menu">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-4 space-y-3">
+        <a href="index.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
+        <a href="products.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
+        <a href="index.html#fit" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
+        <a href="index.html#viewer" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
+        <div class="flex gap-2 pt-2">
+          <button data-action="signin" class="btn-secondary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+          <button data-action="signup" class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        </div>
+        <div id="mobile-user-menu" class="hidden pt-2 border-t border-slate-200 dark:border-slate-700">
+          <p id="mobile-user-name" class="text-sm font-medium mb-2 dark:text-slate-300"></p>
+          <button id="mobile-signout-btn" class="btn-secondary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-28 pb-16">
+    <!-- Breadcrumb -->
+    <div class="max-w-7xl mx-auto px-4 mb-6">
+      <nav class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-purple-600 dark:hover:text-purple-400">Home</a>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a href="products.html" class="hover:text-purple-600 dark:hover:text-purple-400">Products</a>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span id="breadcrumb-product" class="text-slate-900 dark:text-slate-100">Product</span>
+      </nav>
+    </div>
+
+    <!-- Product Detail Section -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div id="loading-state" class="text-center py-20">
+        <div class="loading-spinner loading-spinner-lg mx-auto mb-4"></div>
+        <p class="text-slate-600 dark:text-slate-400">Loading product...</p>
+      </div>
+
+      <div id="product-content" class="hidden">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          <!-- Product Images -->
+          <div class="space-y-4">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <img id="product-main-image" src="" alt="" class="w-full h-96 object-cover">
+            </div>
+            <!-- Additional images could go here -->
+          </div>
+
+          <!-- Product Info -->
+          <div class="space-y-6">
+            <!-- Product Name & Category -->
+            <div>
+              <span id="product-category" class="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-sm font-medium mb-3"></span>
+              <h1 id="product-name" class="text-3xl md:text-4xl font-bold dark:text-white mb-2"></h1>
+              <div class="flex items-center gap-4">
+                <div class="flex items-center">
+                  <span id="product-rating" class="text-amber-500 text-lg mr-2"></span>
+                  <span class="text-sm text-slate-600 dark:text-slate-400" id="rating-text"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div>
+              <p id="product-price" class="text-3xl font-bold text-purple-600 dark:text-purple-400"></p>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <h2 class="text-lg font-semibold mb-2 dark:text-white">Description</h2>
+              <p id="product-description" class="text-slate-600 dark:text-slate-400"></p>
+            </div>
+
+            <!-- Size Selection -->
+            <div>
+              <h2 class="text-lg font-semibold mb-3 dark:text-white">Select Size</h2>
+              <div id="size-selection" class="grid grid-cols-4 gap-3 mb-4">
+                <!-- Sizes will be populated dynamically -->
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Available sizes: <span id="available-sizes"></span></p>
+            </div>
+
+            <!-- Colors -->
+            <div>
+              <h2 class="text-lg font-semibold mb-3 dark:text-white">Available Colors</h2>
+              <div id="color-selection" class="flex gap-3">
+                <!-- Colors will be populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Add to Cart Section -->
+            <div class="pt-6 border-t border-slate-200 dark:border-slate-700 space-y-4">
+              <div id="size-error" class="hidden p-3 rounded-lg bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm">
+                Please select a size
+              </div>
+              <div class="flex gap-4">
+                <button id="add-to-cart-btn" class="btn-primary flex-1 px-6 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                  Add to Cart
+                </button>
+                <button id="view-3d-btn" class="btn-secondary px-6 py-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View in 3D">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex gap-4 text-sm text-slate-600 dark:text-slate-400">
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Free Shipping
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  30-Day Returns
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  AI Fit Guarantee
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="pt-6 border-t border-slate-200 dark:border-slate-700">
+              <h2 class="text-lg font-semibold mb-3 dark:text-white">Product Details</h2>
+              <div class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                <p><strong class="text-slate-900 dark:text-slate-100">Material:</strong> Premium synthetic and leather</p>
+                <p><strong class="text-slate-900 dark:text-slate-100">Care Instructions:</strong> Wipe clean with damp cloth</p>
+                <p><strong class="text-slate-900 dark:text-slate-100">Warranty:</strong> 1 year manufacturer warranty</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Products Section -->
+        <div class="mt-16 pt-12 border-t border-slate-200 dark:border-slate-700">
+          <h2 class="text-2xl font-bold mb-8 dark:text-white">You May Also Like</h2>
+          <div id="related-products" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Related products will be populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-state" class="hidden text-center py-20">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-slate-300 dark:text-slate-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h2 class="text-2xl font-bold mb-2 dark:text-white">Product Not Found</h2>
+        <p class="text-slate-600 dark:text-slate-400 mb-6">The product you're looking for doesn't exist.</p>
+        <a href="products.html" class="btn-primary px-6 py-3 inline-block">Back to Products</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 py-10 mt-16">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">AI fit and 3D for confident shopping.</p>
+        </div>
+      </div>
+      <div class="flex gap-6 text-sm text-slate-600 dark:text-slate-400">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Authentication Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="auth-title" class="text-xl font-semibold dark:text-white">Sign In</h3>
+        <button id="close-auth-modal" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Close authentication modal">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <div id="auth-error" class="hidden mb-4 p-3 rounded-lg bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm"></div>
+        
+        <!-- Sign In Form -->
+        <form id="signin-form" class="space-y-4">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="current-password" minlength="6">
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign In</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="space-y-4 hidden">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Full Name
+            <input type="text" name="name" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="John Doe" autocomplete="name">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="new-password" minlength="6">
+            <span class="text-xs text-slate-500 dark:text-slate-400">Minimum 6 characters</span>
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Up</button>
+        </form>
+
+        <div class="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
+          <span id="switch-auth-text">Already have an account?</span>
+          <button id="switch-auth-link" class="text-purple-600 dark:text-purple-400 font-semibold hover:underline ml-1 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw_36mUmIa04K26BimIgM9Qx-OQU4OTZw",
+      authDomain: "shoesx-2525906.firebaseapp.com",
+      projectId: "shoesx-2525906",
+      storageBucket: "shoesx-2525906.firebasestorage.app",
+      messagingSenderId: "451254233030",
+      appId: "1:451254233030:web:8173eb26fba53e7e24b4c7"
+    };
+
+    let auth, db;
+    if (typeof firebase !== 'undefined') {
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.firestore();
+    }
+  </script>
+  <script src="js/cart.js"></script>
+  <script src="js/cart-ui.js"></script>
+  <script src="app.js"></script>
+  <script src="js/product-detail.js"></script>
+</body>
+</html>
+

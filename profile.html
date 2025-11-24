@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShoesX - Your Profile and Measurements">
+  <title>My Profile - ShoesX</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Set theme immediately to prevent flash
+    (function() {
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'light');
+      }
+      const theme = localStorage.getItem('theme');
+      const htmlElement = document.documentElement;
+      htmlElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+      } else {
+        htmlElement.classList.remove('dark');
+      }
+      if (document.body) {
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        } else {
+          document.body.classList.remove('dark');
+        }
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        });
+      }
+    })();
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-[Space_Grotesk]">
+  <!-- Skip to main content link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <!-- Sticky Navbar -->
+  <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-slate-50/95 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-700 overflow-hidden" role="banner">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between" role="navigation" aria-label="Main navigation">
+      <!-- Logo and Brand -->
+      <a href="index.html" class="flex items-center gap-0 flex-shrink-0">
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
+      </a>
+      
+      <!-- Centered Navigation Links -->
+      <div class="hidden lg:flex items-center gap-6 text-base font-medium flex-1 justify-center" role="menubar">
+        <a href="index.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Home</a>
+        <a href="products.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Shop</a>
+        <a href="index.html#fit" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Fit Assurance</a>
+        <a href="index.html#viewer" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">3D View</a>
+      </div>
+      
+      <!-- Right Side Actions -->
+      <div class="hidden lg:flex items-center gap-3 flex-shrink-0">
+        <button id="theme-toggle" class="w-11 h-11 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all" aria-label="Toggle dark mode">
+          <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+        <button data-action="signin" class="btn-secondary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+        <button data-action="signup" class="btn-primary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        <div id="user-menu" class="hidden flex items-center gap-2">
+          <a href="profile.html" class="text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-2 py-1" id="user-name"></a>
+          <button id="signout-btn" class="btn-secondary px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
+      </div>
+      <button id="menu-toggle" class="lg:hidden w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4" role="menu" aria-label="Mobile navigation menu">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-4 space-y-3">
+        <a href="index.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
+        <a href="products.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
+        <a href="index.html#fit" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
+        <a href="index.html#viewer" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
+        <div class="flex gap-2 pt-2">
+          <button data-action="signin" class="btn-secondary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+          <button data-action="signup" class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        </div>
+        <div id="mobile-user-menu" class="hidden pt-2 border-t border-slate-200 dark:border-slate-700">
+          <p id="mobile-user-name" class="text-sm font-medium mb-2 dark:text-slate-300"></p>
+          <button id="mobile-signout-btn" class="btn-secondary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-28 pb-16" id="main-content">
+    <div class="max-w-5xl mx-auto px-4">
+      <!-- Profile Hero -->
+      <section class="profile-hero">
+        <div class="grid lg:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-purple-600 dark:text-slate-300">Personal fit console</p>
+            <h1 class="font-bold text-slate-900 dark:text-white">Welcome back, <span id="profile-hero-name">ShoesX member</span>.</h1>
+            <p class="text-slate-700 dark:text-slate-200">Track live measurements, sync with AI fit assurance, and keep every order zero-guesswork.</p>
+            <div class="flex flex-wrap gap-3">
+              <button type="button" class="btn-primary px-6 py-3" id="hero-edit-measurements">Update measurements</button>
+              <a href="products.html" class="btn-secondary px-6 py-3">Browse shoes</a>
+            </div>
+          </div>
+          <div class="profile-metric-grid">
+            <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+              <p class="metric-label">Measurement state</p>
+              <p class="metric-value text-xl" id="profile-metric-measurements">Pending</p>
+              <span class="metric-sub">Ensure both feet are synced</span>
+            </div>
+            <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+              <p class="metric-label">Last updated</p>
+              <p class="metric-value text-xl" id="profile-metric-updated">—</p>
+              <span class="metric-sub">Refresh every 30 days</span>
+            </div>
+            <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+              <p class="metric-label">Size history</p>
+              <p class="metric-value text-xl" id="profile-metric-history">0</p>
+              <span class="metric-sub">Purchases logged</span>
+            </div>
+            <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+              <p class="metric-label">Preferred fit</p>
+              <p class="metric-value text-xl" id="profile-metric-fit">Regular</p>
+              <span class="metric-sub">Based on saved settings</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="flex flex-wrap gap-3 mb-10">
+        <a href="#account-section" class="filter-pill text-slate-900 dark:text-white">Account</a>
+        <a href="#measurements-section" class="filter-pill text-slate-900 dark:text-white">Measurements</a>
+        <a href="#history-section" class="filter-pill text-slate-900 dark:text-white">Size history</a>
+        <a href="#feedback-section" class="filter-pill text-slate-900 dark:text-white">Feedback</a>
+      </div>
+
+      <!-- User Info Card -->
+      <div class="card mb-6" id="account-section">
+        <h2 class="text-xl font-semibold mb-4 dark:text-white">Account Information</h2>
+        <div id="user-info" class="space-y-2">
+          <p class="text-slate-600 dark:text-slate-400"><strong>Name:</strong> <span id="user-name-display"></span></p>
+          <p class="text-slate-600 dark:text-slate-400"><strong>Email:</strong> <span id="user-email-display"></span></p>
+        </div>
+      </div>
+
+      <!-- Measurements Card -->
+      <div class="card mb-6" id="measurements-section">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold dark:text-white">Foot Measurements</h2>
+          <button id="edit-measurements" class="btn-secondary px-4 py-2 text-sm">Edit</button>
+        </div>
+        
+        <div id="measurements-display" class="space-y-3">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Gender</p>
+              <p class="font-medium dark:text-white" id="display-gender">-</p>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Foot Length</p>
+              <p class="font-medium dark:text-white" id="display-length">-</p>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Foot Width</p>
+              <p class="font-medium dark:text-white" id="display-width">-</p>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">Preferred Fit</p>
+              <p class="font-medium dark:text-white" id="display-fit">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Measurements Form (Hidden by default) -->
+        <form id="measurements-form" class="hidden space-y-4 mt-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+              Gender
+              <select name="gender" id="form-gender" class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" required>
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+            <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+              Foot Length (cm)
+              <input type="number" name="length" id="form-length" step="0.1" min="10" max="40" class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="26.5" required>
+            </label>
+            <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+              Foot Width (cm)
+              <input type="number" name="width" id="form-width" step="0.1" min="5" max="20" class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="9.8" required>
+            </label>
+            <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+              Preferred Fit
+              <select name="fit" id="form-fit" class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+                <option value="snug">Snug</option>
+                <option value="regular" selected>Regular</option>
+                <option value="roomy">Roomy</option>
+              </select>
+            </label>
+          </div>
+          <div class="flex gap-3">
+            <button type="submit" class="btn-primary px-6 py-2">Save Measurements</button>
+            <button type="button" id="cancel-edit" class="btn-secondary px-6 py-2">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Size History Card -->
+      <div class="card mb-6" id="history-section">
+        <h2 class="text-xl font-semibold mb-4 dark:text-white">Size History</h2>
+        <div id="size-history" class="space-y-3">
+          <p class="text-slate-500 dark:text-slate-400 text-sm">No size history yet. Your purchases will appear here.</p>
+        </div>
+      </div>
+
+      <!-- Fit Feedback Card -->
+      <div class="card" id="feedback-section">
+        <h2 class="text-xl font-semibold mb-4 dark:text-white">Fit Feedback</h2>
+        <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm">Help us improve our size recommendations by providing feedback on your purchases.</p>
+        <div id="fit-feedback-list" class="space-y-3">
+          <p class="text-slate-500 dark:text-slate-400 text-sm">No feedback submitted yet.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Authentication Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="auth-title" class="text-xl font-semibold dark:text-white">Sign In</h3>
+        <button id="close-auth-modal" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Close authentication modal">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <div id="auth-error" class="hidden mb-4 p-3 rounded-lg bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm"></div>
+        
+        <!-- Sign In Form -->
+        <form id="signin-form" class="space-y-4">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="current-password" minlength="6">
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign In</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="space-y-4 hidden">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Full Name
+            <input type="text" name="name" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="John Doe" autocomplete="name">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="new-password" minlength="6">
+            <span class="text-xs text-slate-500 dark:text-slate-400">Minimum 6 characters</span>
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Up</button>
+        </form>
+
+        <div class="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
+          <span id="switch-auth-text">Already have an account?</span>
+          <button id="switch-auth-link" class="text-purple-600 dark:text-purple-400 font-semibold hover:underline ml-1 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+    <div class="bg-white dark:bg-slate-800 rounded-lg p-6">
+      <div class="loading-spinner loading-spinner-lg mx-auto mb-4"></div>
+      <p class="text-center dark:text-white">Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Configuration (same as app.js)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw_36mUmIa04K26BimIgM9Qx-OQU4OTZw",
+      authDomain: "shoesx-2525906.firebaseapp.com",
+      projectId: "shoesx-2525906",
+      storageBucket: "shoesx-2525906.firebasestorage.app",
+      messagingSenderId: "451254233030",
+      appId: "1:451254233030:web:8173eb26fba53e7e24b4c7"
+    };
+
+    let auth, db;
+    if (typeof firebase !== 'undefined') {
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.firestore();
+    }
+  </script>
+  <script src="app.js"></script>
+  <script src="js/profile.js"></script>
+  <script>
+    // Theme Management (same as app.js)
+    const ThemeManager = {
+      init() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        this.setTheme(savedTheme);
+        this.setupThemeToggle();
+      },
+
+      setTheme(theme) {
+        const htmlElement = document.documentElement;
+        const bodyElement = document.body;
+        
+        if (theme === 'dark') {
+          htmlElement.classList.add('dark');
+          bodyElement.classList.add('dark');
+        } else {
+          htmlElement.classList.remove('dark');
+          bodyElement.classList.remove('dark');
+        }
+        
+        htmlElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        this.updateThemeIcon(theme);
+      },
+
+      updateThemeIcon(theme) {
+        const themeIcon = document.getElementById('theme-icon');
+        if (themeIcon) {
+          if (theme === 'dark') {
+            themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
+          } else {
+            themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+          }
+        }
+      },
+
+      toggleTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.setTheme(newTheme);
+      },
+
+      setupThemeToggle() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => this.toggleTheme());
+        }
+      }
+    };
+
+    // Initialize theme when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        ThemeManager.init();
+      });
+    } else {
+      ThemeManager.init();
+    }
+  </script>
+</body>
+</html>
+

@@ -70,13 +70,11 @@
       </a>
       
       <!-- Centered Navigation Links -->
-      <div class="hidden lg:flex items-center gap-8 text-base font-medium flex-1 justify-center" role="menubar">
+      <div class="hidden lg:flex items-center gap-6 text-base font-medium flex-1 justify-center" role="menubar">
         <a href="#home" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Home</a>
-        <a href="#shop" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Shop</a>
-        <a href="#how-it-works" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">How It Works</a>
+        <a href="products.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Shop</a>
         <a href="#fit" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Fit Assurance</a>
         <a href="#viewer" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">3D View</a>
-        <a href="#contact" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Contact</a>
       </div>
       
       <!-- Right Side Actions -->
@@ -89,7 +87,7 @@
         <button data-action="signin" class="btn-secondary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
         <button data-action="signup" class="btn-primary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
         <div id="user-menu" class="hidden flex items-center gap-2">
-          <span id="user-name" class="text-sm font-medium"></span>
+          <a href="profile.html" class="text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-2 py-1" id="user-name"></a>
           <button id="signout-btn" class="btn-secondary px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
         </div>
       </div>
@@ -102,18 +100,15 @@
     <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4" role="menu" aria-label="Mobile navigation menu">
       <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-4 space-y-3">
         <a href="#home" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
-        <a href="#how-it-works" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">How It Works</a>
-        <a href="#shop" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
+        <a href="products.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
         <a href="#fit" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
         <a href="#viewer" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
-        <a href="#analytics" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Analytics</a>
-        <a href="#contact" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Contact</a>
         <div class="flex gap-2 pt-2">
           <button data-action="signin" class="btn-secondary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
           <button data-action="signup" class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
         </div>
-        <div id="mobile-user-menu" class="hidden pt-2 border-t border-slate-200">
-          <p id="mobile-user-name" class="text-sm font-medium mb-2"></p>
+        <div id="mobile-user-menu" class="hidden pt-2 border-t border-slate-200 dark:border-slate-700">
+          <p id="mobile-user-name" class="text-sm font-medium mb-2 dark:text-slate-300"></p>
           <button id="mobile-signout-btn" class="btn-secondary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
         </div>
       </div>
@@ -124,24 +119,24 @@
     <!-- Hero -->
     <section class="max-w-6xl mx-auto px-4 py-16 md:py-24">
       <div class="hero-card relative overflow-hidden rounded-3xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-10">
-        <div class="hero-badge badge-sm left-10 top-8">Size Sync</div>
-        <div class="hero-badge badge-sm right-10 top-16">AI Fit 92%</div>
-        <div class="hero-badge badge-lg left-12 bottom-10">UK 8 | Wide</div>
-        <div class="hero-badge badge-lg right-12 bottom-14">US 9 | Regular</div>
         <div class="flex-1 space-y-6 fade-hero">
-          <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 text-purple-700 text-xs font-semibold border border-purple-100 shadow-sm">Powered by AI Fit Assurance</p>
+          <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-slate-800/60 text-purple-700 dark:text-purple-300 text-xs font-semibold border border-purple-100 dark:border-purple-800 shadow-sm">Powered by AI Fit Assurance</p>
           <h1 class="text-4xl md:text-5xl font-bold leading-tight dark:text-white">Find Your Perfect Fit. Every Time.</h1>
           <p class="text-base text-slate-700 dark:text-slate-300 max-w-xl">ShoesX blends AI sizing intelligence with immersive 3D product visualization so you know the fit, feel, and look before checkout.</p>
           <div class="flex flex-col sm:flex-row gap-3">
-            <button class="btn-primary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Find your perfect shoe size using AI">Find My Size</button>
-            <button class="btn-secondary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Browse our shoe collection">Explore Collection</button>
+            <a href="#fit" class="btn-primary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-center" aria-label="Find your perfect shoe size using AI">Find My Size</a>
+            <a href="products.html" class="btn-secondary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-center" aria-label="Browse our shoe collection">Explore Collection</a>
           </div>
         </div>
         <div class="flex-1 w-full fade-hero">
-          <div class="bg-white/60 rounded-3xl border border-slate-100 shadow-xl p-4 backdrop-blur">
-            <div id="hero-3d-container" class="w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 relative">
+          <div class="bg-white/60 dark:bg-slate-800/60 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-xl p-4 backdrop-blur">
+            <div id="hero-3d-container" class="w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 relative">
+              <div class="hero-badge badge-sm absolute left-4 top-4 hidden sm:flex">Size Sync</div>
+              <div class="hero-badge badge-sm absolute right-4 top-8 hidden sm:flex">AI Fit 92%</div>
+              <div class="hero-badge badge-lg absolute left-6 bottom-6 hidden lg:flex">UK 8 | Wide</div>
+              <div class="hero-badge badge-lg absolute right-6 bottom-10 hidden lg:flex">US 9 | Regular</div>
                <model-viewer id="hero-viewer" src="models/shoe.glb" alt="3D Shoe Model" auto-rotate camera-controls class="w-full h-full" loading="eager" reveal="auto" aria-label="Interactive 3D shoe model" environment-image="neutral" exposure="1" shadow-intensity="1"></model-viewer>
-              <div id="hero-3d-fallback" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 hidden">
+              <div id="hero-3d-fallback" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 hidden">
                 <div class="loading-container">
                   <div class="loading-spinner loading-spinner-lg"></div>
                   <div class="text-center">
@@ -160,6 +155,64 @@
       </div>
     </section>
 
+    <!-- Insights + Quick Filters -->
+    <section class="bg-slate-50 dark:bg-slate-900 py-12 border-t border-b border-slate-200/60 dark:border-slate-800/60">
+      <div class="max-w-6xl mx-auto px-4 space-y-10">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+            <p class="metric-label">Fit accuracy</p>
+            <p class="metric-value">92%</p>
+            <span class="metric-sub">Measured across 2K+ try-ons</span>
+          </div>
+          <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+            <p class="metric-label">Returns avoided</p>
+            <p class="metric-value">63%</p>
+            <span class="metric-sub">Compared with generic sizing</span>
+          </div>
+          <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+            <p class="metric-label">3D-ready models</p>
+            <p class="metric-value">18</p>
+            <span class="metric-sub">Every shoe gets AR + 3D spins</span>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 mb-3">Jump to a collection</p>
+          <div class="flex flex-wrap gap-3">
+            <a href="products.html?category=Running" class="filter-pill">Running</a>
+            <a href="products.html?category=Casual" class="filter-pill">Casual</a>
+            <a href="products.html?category=Trail" class="filter-pill">Trail</a>
+            <a href="products.html?category=Formal" class="filter-pill">Formal</a>
+            <a href="products.html?category=Athletic" class="filter-pill">Athletic</a>
+            <a href="products.html?price=0-150" class="filter-pill">Under $150</a>
+            <a href="products.html?price=200%2B" class="filter-pill">Premium drop</a>
+            <a href="products.html" class="filter-pill">View all</a>
+          </div>
+        </div>
+
+        <div class="home-highlight flex flex-col md:flex-row gap-6 items-center">
+          <div class="flex-1 space-y-2">
+            <p class="text-xs uppercase tracking-[0.3em] text-purple-600 dark:text-slate-400">Live fulfillment</p>
+            <h3 class="text-2xl font-semibold text-slate-900 dark:text-white">Fit-assured orders ship 2.3× faster.</h3>
+            <p class="text-slate-700 dark:text-slate-300">We prioritize builds that include measurements, giving you faster fulfillment and proactive size checks before checkout.</p>
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="cart-pill border-green-300 text-emerald-700 bg-emerald-50 dark:text-emerald-200 dark:border-emerald-400/50 dark:bg-emerald-900/30">Same-day QA</span>
+              <span class="cart-pill text-blue-700 dark:text-blue-300">Free size exchange</span>
+              <span class="cart-pill text-blue-700 dark:text-blue-300">Return risk score</span>
+            </div>
+          </div>
+          <div class="flex-1 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+            <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-4">What you get</p>
+            <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2"><span class="text-purple-500 dark:text-purple-300 text-lg">•</span>Fit recommendations auto-sync to cart.</li>
+              <li class="flex items-center gap-2"><span class="text-purple-500 dark:text-purple-300 text-lg">•</span>AR + 3D previews sent with confirmation email.</li>
+              <li class="flex items-center gap-2"><span class="text-purple-500 dark:text-purple-300 text-lg">•</span>Inventory awareness prevents out-of-stock surprises.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- How It Works -->
     <section id="how-it-works" class="max-w-6xl mx-auto px-4 py-16 md:py-20">
       <div class="flex items-center justify-between mb-10">
@@ -171,130 +224,40 @@
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="card step-card">
-          <div class="icon-circle bg-purple-100 text-purple-700">1</div>
+          <div class="icon-circle bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">1</div>
           <h3 class="font-semibold text-lg dark:text-white">Enter Foot Profile</h3>
           <p class="text-sm text-slate-600 dark:text-slate-300">Add gender, foot length, and width to calibrate your baseline.</p>
         </div>
         <div class="card step-card">
-          <div class="icon-circle bg-orange-100 text-orange-700">2</div>
+          <div class="icon-circle bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">2</div>
           <h3 class="font-semibold text-lg dark:text-white">Pick Category</h3>
           <p class="text-sm text-slate-600 dark:text-slate-300">Sneakers, formal, running, or sport-specific silhouettes.</p>
         </div>
         <div class="card step-card">
-          <div class="icon-circle bg-amber-100 text-amber-700">3</div>
+          <div class="icon-circle bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">3</div>
           <h3 class="font-semibold text-lg dark:text-white">AI Predicts Size</h3>
           <p class="text-sm text-slate-600 dark:text-slate-300">Get best-fit sizing with confidence and return-risk insights.</p>
         </div>
         <div class="card step-card">
-          <div class="icon-circle bg-indigo-100 text-indigo-700">4</div>
+          <div class="icon-circle bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">4</div>
           <h3 class="font-semibold text-lg dark:text-white">Preview in 3D</h3>
           <p class="text-sm text-slate-600 dark:text-slate-300">Rotate, zoom, and see materials before you add to cart.</p>
         </div>
       </div>
     </section>
 
-    <!-- Shop -->
+    <!-- Shop CTA -->
     <section id="shop" class="bg-slate-50 dark:bg-slate-900 py-16 md:py-20">
-      <div class="max-w-6xl mx-auto px-4 space-y-10">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-purple-600 font-semibold text-sm">Shop</p>
-            <h2 class="text-3xl md:text-4xl font-bold dark:text-white">Featured Footwear</h2>
-          </div>
-          <button class="btn-secondary hidden md:inline-flex">View All</button>
-        </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="product-card card tilt-card" data-name="AeroFlex Runner" data-price="$149" data-category="Running" data-rating="4.8" data-sizes="UK 6-11" data-colors="Graphite, Arctic Blue" data-description="Lightweight knit runner with carbon-infused midsole." data-image="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60">
-            <img src="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60" alt="AeroFlex Runner running shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg dark:text-white">AeroFlex Runner</h3>
-              <span class="text-purple-600 dark:text-purple-400 font-semibold">$149</span>
-            </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Running</span>
-              <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for AeroFlex Runner">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add AeroFlex Runner to cart">Add to Cart</button>
-            </div>
-          </div>
-          <div class="product-card card tilt-card" data-name="Pulse Knit Sneaker" data-price="$129" data-category="Casual" data-rating="4.7" data-sizes="UK 5-10" data-colors="Black, Sand" data-description="Breathable knit upper with adaptive foam cushioning." data-image="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60">
-            <img src="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60" alt="Pulse Knit Sneaker casual shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg dark:text-white">Pulse Knit Sneaker</h3>
-              <span class="text-purple-600 dark:text-purple-400 font-semibold">$129</span>
-            </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Casual</span>
-              <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Pulse Knit Sneaker">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Pulse Knit Sneaker to cart">Add to Cart</button>
-            </div>
-          </div>
-          <div class="product-card card tilt-card" data-name="Vertex Trail Pro" data-price="$169" data-category="Trail" data-rating="4.9" data-sizes="UK 7-12" data-colors="Olive, Burnt Orange" data-description="Aggressive outsole with waterproof mesh upper." data-image="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60">
-            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60" alt="Vertex Trail Pro trail running shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg dark:text-white">Vertex Trail Pro</h3>
-              <span class="text-purple-600 dark:text-purple-400 font-semibold">$169</span>
-            </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Trail</span>
-              <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Vertex Trail Pro">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Vertex Trail Pro to cart">Add to Cart</button>
-            </div>
-          </div>
-          <div class="product-card card tilt-card" data-name="Forma Luxe Oxford" data-price="$189" data-category="Formal" data-rating="4.6" data-sizes="UK 6-12" data-colors="Chestnut, Midnight" data-description="Hand-finished leather upper with memory foam insole." data-image="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60">
-            <img src="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60" alt="Forma Luxe Oxford formal shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg dark:text-white">Forma Luxe Oxford</h3>
-              <span class="text-purple-600 dark:text-purple-400 font-semibold">$189</span>
-            </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Formal</span>
-              <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Forma Luxe Oxford">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Forma Luxe Oxford to cart">Add to Cart</button>
-            </div>
-          </div>
-          <div class="product-card card tilt-card" data-name="Halo Court" data-price="$139" data-category="Athletic" data-rating="4.5" data-sizes="UK 6-11" data-colors="White, Navy" data-description="Court-ready leather sneaker with cushioned heel pod." data-image="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60">
-            <img src="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60" alt="Halo Court athletic shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg dark:text-white">Halo Court</h3>
-              <span class="text-purple-600 dark:text-purple-400 font-semibold">$139</span>
-            </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Athletic</span>
-              <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Halo Court">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Halo Court to cart">Add to Cart</button>
-            </div>
-          </div>
-          <div class="product-card card tilt-card" data-name="Nimbus Glide" data-price="$159" data-category="Running" data-rating="4.8" data-sizes="UK 6-12" data-colors="Silver, Neon Lime" data-description="Energy-return midsole with breathable engineered mesh." data-image="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60">
-            <img src="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60" alt="Nimbus Glide running shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg dark:text-white">Nimbus Glide</h3>
-              <span class="text-purple-600 dark:text-purple-400 font-semibold">$159</span>
-            </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Running</span>
-              <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Nimbus Glide">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Nimbus Glide to cart">Add to Cart</button>
-            </div>
-          </div>
-        </div>
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <p class="text-purple-600 font-semibold text-sm mb-2">Shop</p>
+        <h2 class="text-3xl md:text-4xl font-bold dark:text-white mb-4">Explore Our Collection</h2>
+        <p class="text-slate-600 dark:text-slate-300 mb-6 max-w-2xl mx-auto">Browse our complete range of AI-fit footwear with advanced search and filtering options.</p>
+        <a href="products.html" class="btn-primary px-8 py-3 inline-flex items-center gap-2">
+          View All Products
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
       </div>
     </section>
 
@@ -346,7 +309,7 @@
             </form>
             <div id="fit-result" class="mt-6 hidden" role="status" aria-live="polite" aria-atomic="true">
               <div class="result-card">
-                <p class="text-sm text-slate-500 mb-2">Your AI Sizing Preview</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Your AI Sizing Preview</p>
                 <div class="flex flex-wrap gap-3 items-center mb-2">
                   <span id="size-output" class="text-xl font-semibold"></span>
                   <span id="risk-badge" class="px-3 py-1 rounded-full text-xs font-semibold"></span>
@@ -357,37 +320,37 @@
             </div>
           </div>
         </div>
-        <div class="card bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+        <div class="card bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 text-white">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <p class="text-orange-300 text-xs font-semibold uppercase tracking-wide">Real-time fit</p>
+              <p class="text-orange-300 dark:text-orange-400 text-xs font-semibold uppercase tracking-wide">Real-time fit</p>
               <h3 class="text-2xl font-semibold">Confidence Dashboard</h3>
             </div>
-            <div class="px-3 py-1 rounded-full bg-white/10 text-xs">Beta</div>
+            <div class="px-3 py-1 rounded-full bg-white/10 dark:bg-white/20 text-xs">Beta</div>
           </div>
           <div class="space-y-4">
             <div class="flex items-center justify-between text-sm">
               <span>Fit Confidence</span>
               <span class="font-semibold">92%</span>
             </div>
-            <div class="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-              <div class="h-2 bg-orange-400 rounded-full w-[92%]"></div>
+            <div class="w-full h-2 rounded-full bg-white/10 dark:bg-white/20 overflow-hidden">
+              <div class="h-2 bg-orange-400 dark:bg-orange-500 rounded-full w-[92%]"></div>
             </div>
-            <div class="grid grid-cols-3 gap-3 text-sm text-slate-200 pt-4">
-              <div class="bg-white/10 rounded-xl p-3">
-                <p class="text-xs text-slate-300">Return Risk</p>
-                <p class="font-semibold text-orange-300">Low</p>
+            <div class="grid grid-cols-3 gap-3 text-sm text-slate-200 dark:text-slate-300 pt-4">
+              <div class="bg-white/10 dark:bg-white/20 rounded-xl p-3">
+                <p class="text-xs text-slate-300 dark:text-slate-400">Return Risk</p>
+                <p class="font-semibold text-orange-300 dark:text-orange-400">Low</p>
               </div>
-              <div class="bg-white/10 rounded-xl p-3">
-                <p class="text-xs text-slate-300">Top Size</p>
-                <p class="font-semibold text-orange-300">UK 8</p>
+              <div class="bg-white/10 dark:bg-white/20 rounded-xl p-3">
+                <p class="text-xs text-slate-300 dark:text-slate-400">Top Size</p>
+                <p class="font-semibold text-orange-300 dark:text-orange-400">UK 8</p>
               </div>
-              <div class="bg-white/10 rounded-xl p-3">
-                <p class="text-xs text-slate-300">Category</p>
-                <p class="font-semibold text-orange-300">Running</p>
+              <div class="bg-white/10 dark:bg-white/20 rounded-xl p-3">
+                <p class="text-xs text-slate-300 dark:text-slate-400">Category</p>
+                <p class="font-semibold text-orange-300 dark:text-orange-400">Running</p>
               </div>
             </div>
-            <p class="text-xs text-slate-300 pt-2">Data simulated to show how ShoesX reduces returns while improving buyer confidence.</p>
+            <p class="text-xs text-slate-300 dark:text-slate-400 pt-2">Data simulated to show how ShoesX reduces returns while improving buyer confidence.</p>
           </div>
         </div>
       </div>
@@ -402,14 +365,14 @@
             <h2 class="text-3xl md:text-4xl font-bold dark:text-white">View Every Angle</h2>
             <p class="text-slate-600 dark:text-slate-300 mt-2">Powered by 3D models generated from product images (Meshy API in backend).</p>
           </div>
-          <button class="btn-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View product in augmented reality">View in AR</button>
+          <button class="btn-secondary px-6 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View product in augmented reality">View in AR</button>
         </div>
         <div class="card">
           <div class="flex flex-col lg:flex-row gap-8">
-            <div class="flex-1 bg-slate-100 rounded-2xl p-4">
-              <div id="viewer-3d-container" class="w-full h-80 bg-white rounded-xl relative">
+            <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-2xl p-4">
+              <div id="viewer-3d-container" class="w-full h-80 bg-white dark:bg-slate-700 rounded-xl relative">
                  <model-viewer id="main-viewer" src="models/shoe.glb" alt="3D Shoe Model" camera-controls auto-rotate class="w-full h-full" loading="eager" reveal="auto" aria-label="Interactive 3D shoe model viewer" environment-image="neutral" exposure="1" shadow-intensity="1"></model-viewer>
-                <div id="viewer-3d-fallback" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl hidden">
+                <div id="viewer-3d-fallback" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-xl hidden">
                   <div class="loading-container">
                     <div class="loading-spinner loading-spinner-lg"></div>
                     <div class="text-center">
@@ -425,7 +388,7 @@
               </div>
             </div>
             <div class="w-full lg:w-64 space-y-3">
-              <h3 class="font-semibold text-lg">Switch Model</h3>
+              <h3 class="font-semibold text-lg dark:text-white">Switch Model</h3>
               <div class="grid grid-cols-3 lg:grid-cols-2 gap-3" role="group" aria-label="3D model selection">
                 <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" data-src="models/shoe.glb" aria-label="View runner shoe model" aria-pressed="true">Runner</button>
                 <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" data-src="models/formal.glb" aria-label="View formal shoe model" aria-pressed="false">Formal</button>
@@ -454,7 +417,7 @@
             <h3 class="font-semibold text-lg">Fit Accuracy</h3>
             <span class="text-sm text-purple-600 font-semibold">88%</span>
           </div>
-          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+          <div class="w-full h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
             <div class="h-full bg-gradient-to-r from-purple-500 to-orange-500 rounded-full w-[88%]"></div>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">Higher accuracy means fewer returns and happier customers.</p>
@@ -574,11 +537,11 @@
           <p id="modal-description" class="text-sm text-slate-600 dark:text-slate-300"></p>
           <p class="text-lg font-semibold text-purple-600 dark:text-purple-400" id="modal-price"></p>
           <div class="flex gap-2 text-xs text-slate-600 dark:text-slate-300">
-            <span class="px-3 py-1 rounded-full bg-slate-100" id="modal-category"></span>
-            <span class="px-3 py-1 rounded-full bg-slate-100" id="modal-rating"></span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 dark:text-slate-300" id="modal-category"></span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 dark:text-slate-300" id="modal-rating"></span>
           </div>
-          <p class="text-sm"><strong>Sizes:</strong> <span id="modal-sizes"></span></p>
-          <p class="text-sm"><strong>Colors:</strong> <span id="modal-colors"></span></p>
+          <p class="text-sm dark:text-slate-300"><strong class="dark:text-white">Sizes:</strong> <span id="modal-sizes" class="dark:text-slate-300"></span></p>
+          <p class="text-sm dark:text-slate-300"><strong class="dark:text-white">Colors:</strong> <span id="modal-colors" class="dark:text-slate-300"></span></p>
           <button id="modal-view-3d" class="btn-primary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View this product in 3D">View in 3D</button>
         </div>
       </div>
@@ -636,6 +599,52 @@
     </div>
   </div>
 
+  <!-- Size Selection Modal -->
+  <div id="size-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="size-modal-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="size-modal-title" class="text-xl font-semibold dark:text-white">Select Size</h3>
+        <button id="size-modal-close" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500" aria-label="Close size selection">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <p id="size-modal-product" class="text-sm text-slate-600 dark:text-slate-400 mb-4"></p>
+        <div id="size-options" class="grid grid-cols-4 gap-2 mb-4">
+          <!-- Sizes will be populated dynamically -->
+        </div>
+        <div class="flex gap-3">
+          <button id="size-modal-cancel" class="btn-secondary flex-1">Cancel</button>
+          <button id="size-modal-add" class="btn-primary flex-1" disabled>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Selection Modal -->
+  <div id="size-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="size-modal-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="size-modal-title" class="text-xl font-semibold dark:text-white">Select Size</h3>
+        <button id="size-modal-close" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500" aria-label="Close size selection">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <p id="size-modal-product" class="text-sm text-slate-600 dark:text-slate-400 mb-4"></p>
+        <div id="size-options" class="grid grid-cols-4 gap-2 mb-4">
+          <!-- Sizes will be populated dynamically -->
+        </div>
+        <div class="flex gap-3">
+          <button id="size-modal-cancel" class="btn-secondary flex-1">Cancel</button>
+          <button id="size-modal-add" class="btn-primary flex-1" disabled>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/cart.js"></script>
+  <script src="js/cart-ui.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

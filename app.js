@@ -277,12 +277,22 @@ const AuthManager = {
       if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
       if (userName) userName.textContent = user.displayName || user.email;
       if (mobileUserName) mobileUserName.textContent = user.displayName || user.email;
+      
+      // Load cart from Firestore if cart manager exists
+      if (window.cartManager && db) {
+        window.cartManager.loadFromFirestore(user.uid, db);
+      }
     } else {
       // User is signed out
       signInBtns.forEach(btn => btn.style.display = '');
       signUpBtns.forEach(btn => btn.style.display = '');
       if (userMenu) userMenu.classList.add('hidden');
       if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
+      
+      // Save cart to localStorage
+      if (window.cartManager) {
+        window.cartManager.saveToStorage();
+      }
     }
 
     if (signOutBtn) {
@@ -444,6 +454,22 @@ function init() {
   // Initialize Firebase Auth
   AuthManager.init();
 
+  // Initialize Cart System
+  if (typeof CartManager !== 'undefined' && typeof CartUI !== 'undefined') {
+    window.cartManager = new CartManager();
+    window.cartUI = new CartUI(window.cartManager);
+    
+    // Sync cart with Firestore if user is logged in
+    if (AuthManager.currentUser && db) {
+      window.cartManager.loadFromFirestore(AuthManager.currentUser.uid, db);
+    }
+  }
+
+  // Initialize Search Manager
+  if (typeof SearchManager !== 'undefined') {
+    window.searchManager = new SearchManager();
+  }
+
   // Initialize 3D viewer fallbacks and force load models
   // Use requestAnimationFrame to ensure DOM is ready
   requestAnimationFrame(() => {
@@ -465,15 +491,28 @@ function init() {
   // Smooth scroll for nav links with performance optimization
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenu) {
-          mobileMenu.classList.add('hidden');
-          document.getElementById('menu-toggle').setAttribute('aria-expanded', 'false');
+      const href = link.getAttribute('href');
+      
+      // Only prevent default for hash-only links (same page anchors like #home, #fit)
+      // Allow normal navigation for page links (products.html, index.html, index.html#fit, etc.)
+      if (href && href.startsWith('#') && !href.includes('.')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const mobileMenu = document.getElementById('mobile-menu');
+          if (mobileMenu) {
+            mobileMenu.classList.add('hidden');
+            document.getElementById('menu-toggle').setAttribute('aria-expanded', 'false');
+          }
         }
+      }
+      // For page links (products.html, index.html, index.html#fit, etc.), let browser handle navigation normally
+      // Just close mobile menu if open
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+        document.getElementById('menu-toggle').setAttribute('aria-expanded', 'false');
       }
     });
   });
@@ -562,8 +601,16 @@ function init() {
     });
   }
 
+  // View Details buttons now link to product-detail.html
+  // Modal functionality kept for backward compatibility if needed
   document.querySelectorAll('.view-details').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      // If it's a link, let it navigate naturally
+      if (btn.tagName === 'A') {
+        return;
+      }
+      // Otherwise, fallback to modal (for any remaining buttons)
+      e.preventDefault();
       const card = btn.closest('.product-card');
       if (card && modal) {
         document.getElementById('modal-name').textContent = card.dataset.name || '';
@@ -789,6 +836,144 @@ function init() {
       }, 16); // ~60fps
     });
   });
+
+  // Handle Add to Cart clicks
+  let currentProduct = null;
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentProduct = {
+        id: btn.dataset.productId,
+        name: btn.dataset.productName,
+        price: btn.dataset.productPrice,
+        image: btn.dataset.productImage,
+        category: btn.dataset.productCategory
+      };
+      
+      // Show size selection modal
+      showSizeModal();
+    });
+  });
+
+  // Size Modal Functions
+  function showSizeModal() {
+    const modal = document.getElementById('size-modal');
+    const sizeOptions = document.getElementById('size-options');
+    const addBtn = document.getElementById('size-modal-add');
+    const productName = document.getElementById('size-modal-product');
+    
+    if (!modal || !sizeOptions) return;
+    
+    if (productName && currentProduct) {
+      productName.textContent = currentProduct.name;
+    }
+    
+    // Generate size options (UK 5-12)
+    sizeOptions.innerHTML = '';
+    for (let size = 5; size <= 12; size++) {
+      const btn = document.createElement('button');
+      btn.className = 'px-4 py-2 border-2 border-slate-200 dark:border-slate-700 rounded-lg hover:border-purple-500 dark:hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors dark:text-white';
+      btn.textContent = `UK ${size}`;
+      btn.dataset.size = `UK ${size}`;
+      btn.addEventListener('click', () => {
+        // Remove selected class from all
+        sizeOptions.querySelectorAll('button').forEach(b => {
+          b.classList.remove('border-purple-600', 'bg-purple-50', 'dark:bg-purple-900/20', 'text-purple-700', 'dark:text-purple-300');
+        });
+        // Add to clicked
+        btn.classList.add('border-purple-600', 'bg-purple-50', 'dark:bg-purple-900/20', 'text-purple-700', 'dark:text-purple-300');
+        if (addBtn) {
+          addBtn.disabled = false;
+          addBtn.dataset.selectedSize = btn.dataset.size;
+        }
+      });
+      sizeOptions.appendChild(btn);
+    }
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Size modal event listeners
+  document.getElementById('size-modal-cancel')?.addEventListener('click', () => {
+    document.getElementById('size-modal')?.classList.add('hidden');
+    document.body.style.overflow = '';
+    currentProduct = null;
+  });
+
+  document.getElementById('size-modal-close')?.addEventListener('click', () => {
+    document.getElementById('size-modal')?.classList.add('hidden');
+    document.body.style.overflow = '';
+    currentProduct = null;
+  });
+
+  document.getElementById('size-modal-add')?.addEventListener('click', () => {
+    const selectedSize = document.getElementById('size-modal-add')?.dataset.selectedSize;
+    if (currentProduct && selectedSize && window.cartManager) {
+      window.cartManager.addItem(currentProduct, selectedSize, 1);
+      
+      // Save to Firestore if user is logged in
+      if (AuthManager.currentUser && db) {
+        window.cartManager.saveToFirestore(AuthManager.currentUser.uid, db);
+      }
+      
+      document.getElementById('size-modal')?.classList.add('hidden');
+      document.body.style.overflow = '';
+      
+      // Show success notification
+      showNotification('Item added to cart!', 'success');
+      currentProduct = null;
+    }
+  });
+
+  // Close size modal on overlay click
+  document.getElementById('size-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'size-modal') {
+      document.getElementById('size-modal')?.classList.add('hidden');
+      document.body.style.overflow = '';
+      currentProduct = null;
+    }
+  });
+
+  // Close size modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const sizeModal = document.getElementById('size-modal');
+      if (sizeModal && !sizeModal.classList.contains('hidden')) {
+        sizeModal.classList.add('hidden');
+        document.body.style.overflow = '';
+        currentProduct = null;
+      }
+    }
+  });
+
+  // Notification function
+  function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-24 right-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg p-4 z-50 transform translate-x-full transition-transform duration-300 max-w-sm`;
+    notification.innerHTML = `
+      <div class="flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-sm font-medium dark:text-white">${message}</span>
+        <button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 ml-auto" onclick="this.parentElement.parentElement.remove()" aria-label="Close notification">×</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+      notification.classList.remove('translate-x-full');
+    }, 10);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      notification.classList.add('translate-x-full');
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+
+  window.showNotification = showNotification;
 }
 
 // Initialize when DOM is ready

@@ -54,6 +54,343 @@ body {
   border: 1px solid #e2e8f0;
 }
 
+.products-hero {
+  background: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.08), transparent 40%),
+              radial-gradient(circle at 80% 0%, rgba(79, 70, 229, 0.35), transparent 45%),
+              #0f172a;
+}
+
+/* Light mode hero - override the gradient overlay */
+html:not(.dark) .products-hero .absolute,
+body:not(.dark) .products-hero .absolute {
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED, #6366F1) !important;
+}
+
+/* Light mode products hero background */
+html:not(.dark) .products-hero,
+body:not(.dark) .products-hero {
+  background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15), transparent 40%),
+              radial-gradient(circle at 80% 0%, rgba(99, 102, 241, 0.2), transparent 45%),
+              #f8fafc !important;
+}
+
+.feature-chip {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  backdrop-filter: blur(6px);
+}
+
+.metric-card {
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  color: #0f172a;
+}
+
+/* Light mode metric card background and border */
+html:not(.dark) .metric-card,
+body:not(.dark) .metric-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  color: #0f172a !important;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.6);
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0.35rem;
+  color: #0f172a;
+}
+
+.metric-sub {
+  font-size: 0.9rem;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+.filter-pill {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+  color: #0f172a;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.filter-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+}
+
+.filter-pill.is-active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.25);
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.filter-chip:hover {
+  transform: translateY(-1px);
+  background: #e2e8f0;
+}
+
+.result-toolbar {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+}
+
+.home-metric-grid,
+.profile-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.home-highlight {
+  border-radius: 1.5rem;
+  background: linear-gradient(120deg, rgba(79, 70, 229, 0.08), rgba(255, 255, 255, 0.9));
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 1.5rem;
+}
+
+/* Light mode home highlight */
+html:not(.dark) .home-highlight,
+body:not(.dark) .home-highlight {
+  background: linear-gradient(120deg, rgba(139, 92, 246, 0.12), rgba(255, 255, 255, 0.95)) !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+  color: #0f172a !important;
+}
+
+/* Light mode home highlight nested cards */
+html:not(.dark) .home-highlight > div,
+body:not(.dark) .home-highlight > div {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Light mode cards with bg-white class */
+html:not(.dark) .bg-white,
+body:not(.dark) .bg-white {
+  background: #ffffff !important;
+}
+
+/* Light mode filter sidebar card */
+html:not(.dark) #desktop-filters .card,
+body:not(.dark) #desktop-filters .card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode analytics cards */
+html:not(.dark) #analytics .card,
+body:not(.dark) #analytics .card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode contact form card */
+html:not(.dark) #contact .card,
+body:not(.dark) #contact .card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode elements with bg-white class */
+html:not(.dark) .bg-white,
+body:not(.dark) .bg-white,
+html:not(.dark) .bg-white\/90,
+body:not(.dark) .bg-white\/90 {
+  background: #ffffff !important;
+}
+
+/* Light mode home highlight nested div with bg-white */
+html:not(.dark) .home-highlight .bg-white,
+body:not(.dark) .home-highlight .bg-white {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode viewer 3D container */
+html:not(.dark) #viewer-3d-container,
+body:not(.dark) #viewer-3d-container {
+  background: #ffffff !important;
+}
+
+/* Light mode filter sidebar */
+html:not(.dark) #filter-sidebar,
+body:not(.dark) #filter-sidebar {
+  background: #ffffff !important;
+}
+
+/* Light mode mobile menu */
+html:not(.dark) #mobile-menu > div,
+body:not(.dark) #mobile-menu > div {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.profile-hero {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(14, 165, 233, 0.08));
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 2rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.08);
+}
+
+/* Light mode profile hero */
+html:not(.dark) .profile-hero,
+body:not(.dark) .profile-hero {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(14, 165, 233, 0.12)) !important;
+  border-color: rgba(203, 213, 225, 0.5) !important;
+  color: #0f172a !important;
+}
+
+.profile-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.cart-hero {
+  background: linear-gradient(130deg, rgba(139, 92, 246, 0.08), rgba(14, 165, 233, 0.08));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  color: #0f172a;
+}
+
+/* Light mode cart hero */
+html:not(.dark) .cart-hero,
+body:not(.dark) .cart-hero {
+  background: linear-gradient(130deg, rgba(139, 92, 246, 0.12), rgba(14, 165, 233, 0.12)) !important;
+  border-bottom-color: rgba(226, 232, 240, 0.8) !important;
+  color: #0f172a !important;
+}
+
+.cart-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.cart-metric {
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Light mode cart metric */
+html:not(.dark) .cart-metric,
+body:not(.dark) .cart-metric {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+  color: #0f172a !important;
+}
+
+.cart-metric p {
+  margin: 0;
+}
+
+.cart-metric .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #64748b;
+}
+
+.cart-metric .value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cart-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.1);
+  color: #1e40af;
+}
+
+.product-card-media {
+  position: relative;
+}
+
+.product-chip {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(15, 23, 42, 0.85);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3);
+}
+
+.fit-score {
+  font-weight: 600;
+  color: #059669;
+}
+
+.product-meta {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.product-meta li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.2rem;
+}
+
+.product-meta li span:first-child {
+  font-weight: 600;
+  color: #475569;
+}
+
+.logistics-pill {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  font-weight: 600;
+}
+
 .hero-badge {
   position: absolute;
   padding: 0.65rem 1rem;
@@ -64,6 +401,8 @@ body {
   color: #0f172a;
   box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
   animation: float 6s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .badge-sm {
@@ -214,6 +553,8 @@ body {
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 0.8s ease, transform 0.8s ease;
+  position: relative;
+  z-index: 10;
 }
 
 .show {
@@ -285,6 +626,13 @@ body {
   }
 }
 
+/* Hide badges on smaller screens to prevent overlap with buttons */
+@media (max-width: 768px) {
+  .hero-badge {
+    display: none;
+  }
+}
+
 /* Skip to main content link for accessibility */
 .skip-link {
   position: absolute;
@@ -342,6 +690,99 @@ body.dark .hero-badge {
   background: rgba(30, 41, 59, 0.95) !important;
   border-color: #334155 !important;
   color: var(--text-primary) !important;
+}
+
+.dark .metric-card,
+html.dark .metric-card,
+body.dark .metric-card {
+  border-color: rgba(148, 163, 184, 0.2);
+  color: var(--text-primary);
+}
+
+.dark .metric-label,
+.dark .metric-sub {
+  color: rgba(226, 232, 240, 0.65);
+}
+
+/* Light mode metric text - ensure visibility */
+html:not(.dark) .metric-label,
+body:not(.dark) .metric-label {
+  color: rgba(15, 23, 42, 0.7) !important;
+}
+
+html:not(.dark) .metric-value,
+body:not(.dark) .metric-value {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .metric-sub,
+body:not(.dark) .metric-sub {
+  color: rgba(15, 23, 42, 0.6) !important;
+}
+
+.dark .filter-pill,
+html.dark .filter-pill,
+body.dark .filter-pill {
+  background: #1e293b;
+  border-color: #334155;
+  color: var(--text-primary);
+}
+
+.dark .result-toolbar,
+html.dark .result-toolbar,
+body.dark .result-toolbar {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+.dark .product-chip {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.dark .product-meta li span:first-child {
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.dark .logistics-pill,
+html.dark .logistics-pill,
+body.dark .logistics-pill {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--text-primary);
+}
+
+.dark .filter-chip,
+html.dark .filter-chip,
+body.dark .filter-chip {
+  background: #1e293b;
+  border-color: #334155;
+  color: var(--text-primary);
+}
+
+.dark .metric-card,
+.dark .home-highlight,
+.dark .profile-hero {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(148, 163, 184, 0.2);
+  color: var(--text-primary);
+}
+
+.dark .cart-hero {
+  background: linear-gradient(130deg, rgba(30, 41, 59, 0.85), rgba(148, 163, 184, 0.15));
+  border-color: rgba(51, 65, 85, 0.8);
+  color: var(--text-primary);
+}
+
+.dark .cart-metric {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.dark .cart-pill {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: #bfdbfe;
 }
 
 .dark .form-input,
@@ -455,7 +896,8 @@ header a[href="#home"] img {
   object-fit: contain !important;
 }
 
-header a[href="#home"] span {
+header a[href="#home"] span,
+header a[href="index.html"] span {
   font-size: 1.5rem !important; /* Balanced text size */
   font-weight: 700 !important;
   margin-left: -0.25rem !important;
@@ -463,8 +905,22 @@ header a[href="#home"] span {
 }
 
 html.dark header a[href="#home"] span,
-body.dark header a[href="#home"] span {
+body.dark header a[href="#home"] span,
+html.dark header a[href="index.html"] span,
+body.dark header a[href="index.html"] span {
   color: #f1f5f9 !important; /* Dark mode color */
+}
+
+/* Ensure ShoesX span is visible in light mode on all pages */
+html:not(.dark) header a span,
+body:not(.dark) header a span {
+  color: #0f172a !important;
+}
+
+/* Ensure footer ShoesX span is visible in light mode */
+html:not(.dark) footer span,
+body:not(.dark) footer span {
+  color: #0f172a !important;
 }
 
 footer a img,
@@ -543,8 +999,30 @@ html:not(.dark) body {
 /* Light mode specific styles - ensure they override Tailwind when not in dark mode */
 html:not(.dark) .card,
 body:not(.dark) .card {
-  background: #fff !important;
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
   color: #0f172a !important;
+}
+
+/* Light mode step cards */
+html:not(.dark) .step-card,
+body:not(.dark) .step-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode product cards */
+html:not(.dark) .product-card,
+body:not(.dark) .product-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode result card */
+html:not(.dark) .result-card,
+body:not(.dark) .result-card {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(249, 115, 22, 0.15)) !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
 }
 
 html:not(.dark) .hero-card,
@@ -660,9 +1138,99 @@ body:not(.dark) .nav-link:hover {
   border-color: #334155;
 }
 
-/* Icon circles in dark mode for steps */
-.dark .icon-circle {
-  color: inherit;
+/* Icon circles in dark mode for steps - ensure numbers are visible */
+
+.dark .step-card .icon-circle.bg-purple-100,
+html.dark .step-card .icon-circle.bg-purple-100,
+body.dark .step-card .icon-circle.bg-purple-100 {
+  background: rgba(139, 92, 246, 0.3) !important;
+  color: #c4b5fd !important;
+}
+
+.dark .step-card .icon-circle.bg-orange-100,
+html.dark .step-card .icon-circle.bg-orange-100,
+body.dark .step-card .icon-circle.bg-orange-100 {
+  background: rgba(249, 115, 22, 0.3) !important;
+  color: #fdba74 !important;
+}
+
+.dark .step-card .icon-circle.bg-amber-100,
+html.dark .step-card .icon-circle.bg-amber-100,
+body.dark .step-card .icon-circle.bg-amber-100 {
+  background: rgba(245, 158, 11, 0.3) !important;
+  color: #fcd34d !important;
+}
+
+.dark .step-card .icon-circle.bg-indigo-100,
+html.dark .step-card .icon-circle.bg-indigo-100,
+body.dark .step-card .icon-circle.bg-indigo-100 {
+  background: rgba(99, 102, 241, 0.3) !important;
+  color: #a5b4fc !important;
+}
+
+/* Also handle Tailwind dark mode classes */
+.dark .step-card .icon-circle[class*="dark:bg-purple"],
+html.dark .step-card .icon-circle[class*="dark:bg-purple"],
+body.dark .step-card .icon-circle[class*="dark:bg-purple"] {
+  background: rgba(139, 92, 246, 0.3) !important;
+  color: #c4b5fd !important;
+}
+
+/* Quantity buttons in cart */
+.quantity-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.dark .quantity-btn,
+html.dark .quantity-btn,
+body.dark .quantity-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.dark .quantity-btn:hover,
+html.dark .quantity-btn:hover,
+body.dark .quantity-btn:hover {
+  background: #334155;
+  border-color: #475569;
+}
+
+.dark .step-card .icon-circle[class*="dark:bg-orange"],
+html.dark .step-card .icon-circle[class*="dark:bg-orange"],
+body.dark .step-card .icon-circle[class*="dark:bg-orange"] {
+  background: rgba(249, 115, 22, 0.3) !important;
+  color: #fdba74 !important;
+}
+
+.dark .step-card .icon-circle[class*="dark:bg-amber"],
+html.dark .step-card .icon-circle[class*="dark:bg-amber"],
+body.dark .step-card .icon-circle[class*="dark:bg-amber"] {
+  background: rgba(245, 158, 11, 0.3) !important;
+  color: #fcd34d !important;
+}
+
+.dark .step-card .icon-circle[class*="dark:bg-indigo"],
+html.dark .step-card .icon-circle[class*="dark:bg-indigo"],
+body.dark .step-card .icon-circle[class*="dark:bg-indigo"] {
+  background: rgba(99, 102, 241, 0.3) !important;
+  color: #a5b4fc !important;
 }
 
 /* Ensure text visibility in dark cards */
@@ -764,6 +1332,120 @@ html:not(.dark) #contact,
 body:not(.dark) #contact {
   background: #f8fafc !important;
   color: #0f172a !important;
+}
+
+/* Light mode sections with bg-slate-50 class */
+html:not(.dark) section.bg-slate-50,
+body:not(.dark) section.bg-slate-50,
+html:not(.dark) .bg-slate-50,
+body:not(.dark) .bg-slate-50 {
+  background: #f8fafc !important;
+}
+
+/* Light mode insights section */
+html:not(.dark) section.bg-slate-50.border-t,
+body:not(.dark) section.bg-slate-50.border-t {
+  background: #f8fafc !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+}
+
+/* Light mode products page quick filters section */
+html:not(.dark) section.bg-slate-50.border-b,
+body:not(.dark) section.bg-slate-50.border-b {
+  background: #f8fafc !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+}
+
+/* Light mode products section */
+html:not(.dark) section.bg-slate-50.py-16,
+body:not(.dark) section.bg-slate-50.py-16,
+html:not(.dark) section.bg-slate-50.py-20,
+body:not(.dark) section.bg-slate-50.py-20 {
+  background: #f8fafc !important;
+}
+
+/* Light mode cart sidebar */
+html:not(.dark) #cart-sidebar,
+body:not(.dark) #cart-sidebar {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Light mode cart items container */
+html:not(.dark) #cart-items,
+body:not(.dark) #cart-items {
+  background: #f8fafc !important;
+}
+
+/* Light mode cart item cards */
+html:not(.dark) #cart-items > div,
+body:not(.dark) #cart-items > div {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Light mode profile card headings and text */
+html:not(.dark) .card h2,
+body:not(.dark) .card h2,
+html:not(.dark) #account-section h2,
+body:not(.dark) #account-section h2,
+html:not(.dark) #measurements-section h2,
+body:not(.dark) #measurements-section h2,
+html:not(.dark) #history-section h2,
+body:not(.dark) #history-section h2,
+html:not(.dark) #feedback-section h2,
+body:not(.dark) #feedback-section h2 {
+  color: #0f172a !important;
+}
+
+/* Light mode profile display text */
+html:not(.dark) #measurements-display p.font-medium,
+body:not(.dark) #measurements-display p.font-medium,
+html:not(.dark) #display-gender,
+body:not(.dark) #display-gender,
+html:not(.dark) #display-length,
+body:not(.dark) #display-length,
+html:not(.dark) #display-width,
+body:not(.dark) #display-width,
+html:not(.dark) #display-fit,
+body:not(.dark) #display-fit {
+  color: #0f172a !important;
+}
+
+/* Light mode user info text */
+html:not(.dark) #user-info p,
+body:not(.dark) #user-info p,
+html:not(.dark) #user-name-display,
+body:not(.dark) #user-name-display,
+html:not(.dark) #user-email-display,
+body:not(.dark) #user-email-display {
+  color: #475569 !important;
+}
+
+html:not(.dark) #user-info p strong,
+body:not(.dark) #user-info p strong {
+  color: #0f172a !important;
+}
+
+/* Light mode filter pills in profile */
+html:not(.dark) .filter-pill.text-slate-900,
+body:not(.dark) .filter-pill.text-slate-900 {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode profile hero text */
+html:not(.dark) .profile-hero h1,
+body:not(.dark) .profile-hero h1,
+html:not(.dark) #profile-hero-name,
+body:not(.dark) #profile-hero-name {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .profile-hero p,
+body:not(.dark) .profile-hero p {
+  color: #475569 !important;
 }
 
 /* Ensure headings in light mode sections are visible */

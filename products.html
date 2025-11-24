@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShoesX - Browse our complete collection of AI-fit footwear">
+  <title>Products - ShoesX</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Set theme immediately to prevent flash
+    (function() {
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'light');
+      }
+      const theme = localStorage.getItem('theme');
+      const htmlElement = document.documentElement;
+      htmlElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+      } else {
+        htmlElement.classList.remove('dark');
+      }
+      if (document.body) {
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        } else {
+          document.body.classList.remove('dark');
+        }
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        });
+      }
+    })();
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-[Space_Grotesk]">
+  <!-- Skip to main content link -->
+  <a href="#products" class="skip-link">Skip to main content</a>
+  
+  <!-- Sticky Navbar -->
+  <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-slate-50/95 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-700 overflow-hidden" role="banner">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between" role="navigation" aria-label="Main navigation">
+      <!-- Logo and Brand -->
+      <a href="index.html" class="flex items-center gap-0 flex-shrink-0">
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
+      </a>
+      
+      <!-- Search Bar (Desktop) -->
+      <div class="hidden lg:flex items-center flex-1 max-w-md mx-8">
+        <div class="relative w-full">
+          <input type="text" id="search-input" placeholder="Search products..." class="w-full px-4 py-2 pl-10 pr-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" aria-label="Search products">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Centered Navigation Links -->
+      <div class="hidden lg:flex items-center gap-6 text-base font-medium flex-1 justify-center" role="menubar">
+        <a href="index.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Home</a>
+        <a href="products.html" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Shop</a>
+        <a href="index.html#fit" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Fit Assurance</a>
+        <a href="index.html#viewer" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">3D View</a>
+      </div>
+      
+      <!-- Right Side Actions -->
+      <div class="hidden lg:flex items-center gap-3 flex-shrink-0">
+        <button id="theme-toggle" class="w-11 h-11 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all" aria-label="Toggle dark mode">
+          <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+        <button data-action="signin" class="btn-secondary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+        <button data-action="signup" class="btn-primary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        <div id="user-menu" class="hidden flex items-center gap-2">
+          <a href="profile.html" class="text-sm font-medium hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-2 py-1" id="user-name"></a>
+          <button id="signout-btn" class="btn-secondary px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
+      </div>
+      <button id="menu-toggle" class="lg:hidden w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4" role="menu" aria-label="Mobile navigation menu">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-4 space-y-3">
+        <a href="index.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
+        <a href="products.html" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
+        <a href="index.html#fit" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
+        <a href="index.html#viewer" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
+        <!-- Mobile Search -->
+        <div class="pt-2">
+          <input type="text" id="mobile-search-input" placeholder="Search products..." class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500" aria-label="Search products">
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button data-action="signin" class="btn-secondary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+          <button data-action="signup" class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        </div>
+        <div id="mobile-user-menu" class="hidden pt-2 border-t border-slate-200 dark:border-slate-700">
+          <p id="mobile-user-name" class="text-sm font-medium mb-2 dark:text-slate-300"></p>
+          <button id="mobile-signout-btn" class="btn-secondary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-28" id="products">
+    <!-- Products Hero -->
+    <section class="products-hero relative overflow-hidden py-12 md:py-16">
+      <div class="absolute inset-0 bg-gradient-to-r from-indigo-600/90 via-purple-600/80 to-slate-900 dark:from-indigo-600/90 dark:via-purple-600/80 dark:to-slate-900"></div>
+      <div class="max-w-7xl mx-auto px-4 relative z-10">
+        <div class="grid lg:grid-cols-3 gap-10 items-center">
+          <div class="space-y-6 text-white dark:text-white">
+            <p class="hero-eyebrow text-sm uppercase tracking-[0.2em] text-white/90 dark:text-white/70">Smart catalog</p>
+            <h1 class="text-3xl md:text-4xl font-bold leading-snug">Find footwear that already knows your fit.</h1>
+            <p class="text-white/95 dark:text-white/80 text-base md:text-lg">Search, filter, and compare AI-ready footwear with live fit confidence, inventory signals, and rich product data.</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="feature-chip bg-white/30 dark:bg-white/20 border border-white/50 dark:border-white/30 text-white">Live fit confidence</span>
+              <span class="feature-chip bg-white/30 dark:bg-white/20 border border-white/50 dark:border-white/30 text-white">Free size exchanges</span>
+              <span class="feature-chip bg-white/30 dark:bg-white/20 border border-white/50 dark:border-white/30 text-white">3D + AR previews</span>
+            </div>
+          </div>
+          <div class="lg:col-span-2">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+                <p class="metric-label">Products live</p>
+                <p class="metric-value" id="metric-total-products">06</p>
+                <span class="metric-sub">Updated daily</span>
+              </div>
+              <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+                <p class="metric-label">Avg. fit confidence</p>
+                <p class="metric-value" id="metric-fit-rate">92%</p>
+                <span class="metric-sub">AI recommendations</span>
+              </div>
+              <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+                <p class="metric-label">Top category</p>
+                <p class="metric-value text-xl" id="metric-top-category">Running</p>
+                <span class="metric-sub">Based on user demand</span>
+              </div>
+              <div class="metric-card bg-white/90 dark:bg-slate-900/70">
+                <p class="metric-label">Avg. rating</p>
+                <p class="metric-value" id="metric-rating">4.7</p>
+                <span class="metric-sub">Peer + fit feedback</span>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3 items-center">
+              <button id="filter-toggle-desktop" class="px-6 py-3 inline-flex items-center gap-2 bg-white/90 hover:bg-white dark:bg-slate-800/80 dark:hover:bg-slate-700 border border-white/50 dark:border-slate-700 rounded-full font-semibold text-slate-900 dark:text-white transition-all shadow-md hover:shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                Toggle Filters
+              </button>
+              <p class="text-white/95 dark:text-white/80 text-sm">Use filters to blend AI fit data with classic shopping controls.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Filters -->
+    <section class="bg-slate-50 dark:bg-slate-900 py-6 border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col gap-4">
+        <p class="text-sm uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Quick filters</p>
+        <div class="flex flex-wrap gap-3">
+          <button class="filter-pill" data-quick-category="Running">Running</button>
+          <button class="filter-pill" data-quick-category="Casual">Casual</button>
+          <button class="filter-pill" data-quick-category="Trail">Trail</button>
+          <button class="filter-pill" data-quick-category="Formal">Formal</button>
+          <button class="filter-pill" data-quick-category="Athletic">Athletic</button>
+          <button class="filter-pill" data-quick-price="0-150">Under $150</button>
+          <button class="filter-pill" data-quick-price="150-200">$150 - $200</button>
+          <button class="filter-pill" data-quick-price="200+">Over $200</button>
+          <button class="filter-pill" data-quick-reset>Clear Quick Filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="bg-slate-50 dark:bg-slate-900 py-16 md:py-20">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="result-toolbar flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+          <div>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Showing <span id="results-count" class="font-semibold text-slate-900 dark:text-white">6</span> of <span id="total-count" class="font-semibold text-slate-900 dark:text-white">6</span> products</p>
+            <div id="active-filters" class="flex flex-wrap gap-2 mt-3 text-xs text-slate-500 dark:text-slate-400">
+              <span class="text-slate-400 dark:text-slate-500">No filters applied</span>
+            </div>
+          </div>
+          <div class="flex flex-col md:flex-row md:items-center gap-3">
+            <label for="sort-options" class="text-sm font-medium text-slate-600 dark:text-slate-300">Sort by</label>
+            <select id="sort-options" class="form-input min-w-[200px] dark:bg-slate-800 dark:border-slate-700 dark:text-white">
+              <option value="default">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name: A to Z</option>
+              <option value="rating">Rating: High to Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-6">
+          <!-- Filter Sidebar (Desktop) -->
+          <aside id="desktop-filters" class="hidden lg:block w-64 flex-shrink-0">
+            <div class="card sticky top-32">
+              <div class="flex items-center justify-between mb-6">
+                <h2 class="text-lg font-semibold dark:text-white">Filters</h2>
+                <button id="close-desktop-filters" class="lg:hidden w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Category Filter -->
+              <div class="mb-6">
+                <h3 class="font-semibold text-sm mb-3 dark:text-white">Category</h3>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="filter-category" value="Running" checked>
+                    <span class="text-sm dark:text-slate-300">Running</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="filter-category" value="Casual" checked>
+                    <span class="text-sm dark:text-slate-300">Casual</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="filter-category" value="Formal" checked>
+                    <span class="text-sm dark:text-slate-300">Formal</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="filter-category" value="Trail" checked>
+                    <span class="text-sm dark:text-slate-300">Trail</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="filter-category" value="Athletic" checked>
+                    <span class="text-sm dark:text-slate-300">Athletic</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Price Filter -->
+              <div class="mb-6">
+                <h3 class="font-semibold text-sm mb-3 dark:text-white">Price Range</h3>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="price-filter" class="filter-price" value="0-150" checked>
+                    <span class="text-sm dark:text-slate-300">Under $150</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="price-filter" class="filter-price" value="150-200">
+                    <span class="text-sm dark:text-slate-300">$150 - $200</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="price-filter" class="filter-price" value="200+">
+                    <span class="text-sm dark:text-slate-300">Over $200</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="price-filter" class="filter-price" value="all">
+                    <span class="text-sm dark:text-slate-300">All Prices</span>
+                  </label>
+                </div>
+              </div>
+
+              <button id="clear-filters" class="btn-secondary w-full">Clear All Filters</button>
+            </div>
+          </aside>
+
+          <!-- Products Grid -->
+          <div class="flex-1">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid">
+              <!-- Product Cards -->
+              <div class="product-card card tilt-card" data-name="AeroFlex Runner" data-price="$149" data-category="Running" data-rating="4.8" data-sizes="UK 6-11" data-colors="Graphite, Arctic Blue" data-description="Lightweight knit runner with carbon-infused midsole." data-image="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60" data-fit-score="94">
+                <div class="product-card-media mb-4">
+                  <img src="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60" alt="AeroFlex Runner running shoe" class="rounded-2xl h-48 w-full object-cover" loading="lazy">
+                  <span class="product-chip">New drop</span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 class="font-semibold text-lg dark:text-white">AeroFlex Runner</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Lightweight knit runner with carbon-infused midsole.</p>
+                  </div>
+                  <span class="text-purple-600 dark:text-purple-400 font-semibold">$149</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Running</span>
+                  <span class="fit-score" aria-label="Fit confidence score">AI Fit 94%</span>
+                </div>
+                <ul class="product-meta text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <li><span>Sizes:</span><span>UK 6-11</span></li>
+                  <li><span>Colors:</span><span>Graphite, Arctic Blue</span></li>
+                </ul>
+                <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 mb-4">
+                  <span class="logistics-pill">2-day dispatch</span>
+                  <span class="logistics-pill">Low return risk</span>
+                </div>
+                <div class="flex gap-2">
+                  <a href="product-detail.html?id=aeroflex-runner" class="btn-secondary flex-1 text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for AeroFlex Runner">View Details</a>
+                  <button class="btn-primary flex-1 add-to-cart focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" 
+                          data-product-id="aeroflex-runner"
+                          data-product-name="AeroFlex Runner"
+                          data-product-price="$149"
+                          data-product-image="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60"
+                          data-product-category="Running"
+                          aria-label="Add AeroFlex Runner to cart">Add to Cart</button>
+                </div>
+              </div>
+
+              <div class="product-card card tilt-card" data-name="Pulse Knit Sneaker" data-price="$129" data-category="Casual" data-rating="4.7" data-sizes="UK 5-10" data-colors="Black, Sand" data-description="Breathable knit upper with adaptive foam cushioning." data-image="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60" data-fit-score="90">
+                <div class="product-card-media mb-4">
+                  <img src="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60" alt="Pulse Knit Sneaker casual shoe" class="rounded-2xl h-48 w-full object-cover" loading="lazy">
+                  <span class="product-chip">Community pick</span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 class="font-semibold text-lg dark:text-white">Pulse Knit Sneaker</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Breathable knit upper with adaptive foam cushioning.</p>
+                  </div>
+                  <span class="text-purple-600 dark:text-purple-400 font-semibold">$129</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Casual</span>
+                  <span class="fit-score" aria-label="Fit confidence score">AI Fit 90%</span>
+                </div>
+                <ul class="product-meta text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <li><span>Sizes:</span><span>UK 5-10</span></li>
+                  <li><span>Colors:</span><span>Black, Sand</span></li>
+                </ul>
+                <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 mb-4">
+                  <span class="logistics-pill">Flexible knit</span>
+                  <span class="logistics-pill">Carbon neutral ship</span>
+                </div>
+                <div class="flex gap-2">
+                  <a href="product-detail.html?id=pulse-knit-sneaker" class="btn-secondary flex-1 text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Pulse Knit Sneaker">View Details</a>
+                  <button class="btn-primary flex-1 add-to-cart focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" 
+                          data-product-id="pulse-knit-sneaker"
+                          data-product-name="Pulse Knit Sneaker"
+                          data-product-price="$129"
+                          data-product-image="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60"
+                          data-product-category="Casual"
+                          aria-label="Add Pulse Knit Sneaker to cart">Add to Cart</button>
+                </div>
+              </div>
+
+              <div class="product-card card tilt-card" data-name="Vertex Trail Pro" data-price="$169" data-category="Trail" data-rating="4.9" data-sizes="UK 7-12" data-colors="Olive, Burnt Orange" data-description="Aggressive outsole with waterproof mesh upper." data-image="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60" data-fit-score="96">
+                <div class="product-card-media mb-4">
+                  <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60" alt="Vertex Trail Pro trail running shoe" class="rounded-2xl h-48 w-full object-cover" loading="lazy">
+                  <span class="product-chip">Trail tested</span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 class="font-semibold text-lg dark:text-white">Vertex Trail Pro</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Aggressive outsole with waterproof mesh upper.</p>
+                  </div>
+                  <span class="text-purple-600 dark:text-purple-400 font-semibold">$169</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Trail</span>
+                  <span class="fit-score" aria-label="Fit confidence score">AI Fit 96%</span>
+                </div>
+                <ul class="product-meta text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <li><span>Sizes:</span><span>UK 7-12</span></li>
+                  <li><span>Colors:</span><span>Olive, Burnt Orange</span></li>
+                </ul>
+                <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 mb-4">
+                  <span class="logistics-pill">Waterproof mesh</span>
+                  <span class="logistics-pill">Grip rated 5/5</span>
+                </div>
+                <div class="flex gap-2">
+                  <a href="product-detail.html?id=vertex-trail-pro" class="btn-secondary flex-1 text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Vertex Trail Pro">View Details</a>
+                  <button class="btn-primary flex-1 add-to-cart focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" 
+                          data-product-id="vertex-trail-pro"
+                          data-product-name="Vertex Trail Pro"
+                          data-product-price="$169"
+                          data-product-image="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60"
+                          data-product-category="Trail"
+                          aria-label="Add Vertex Trail Pro to cart">Add to Cart</button>
+                </div>
+              </div>
+
+              <div class="product-card card tilt-card" data-name="Forma Luxe Oxford" data-price="$189" data-category="Formal" data-rating="4.6" data-sizes="UK 6-12" data-colors="Chestnut, Midnight" data-description="Hand-finished leather upper with memory foam insole." data-image="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60" data-fit-score="88">
+                <div class="product-card-media mb-4">
+                  <img src="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60" alt="Forma Luxe Oxford formal shoe" class="rounded-2xl h-48 w-full object-cover" loading="lazy">
+                  <span class="product-chip">Premium leather</span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 class="font-semibold text-lg dark:text-white">Forma Luxe Oxford</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Hand-finished leather upper with memory foam insole.</p>
+                  </div>
+                  <span class="text-purple-600 dark:text-purple-400 font-semibold">$189</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Formal</span>
+                  <span class="fit-score" aria-label="Fit confidence score">AI Fit 88%</span>
+                </div>
+                <ul class="product-meta text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <li><span>Sizes:</span><span>UK 6-12</span></li>
+                  <li><span>Colors:</span><span>Chestnut, Midnight</span></li>
+                </ul>
+                <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 mb-4">
+                  <span class="logistics-pill">Memory foam footbed</span>
+                  <span class="logistics-pill">Free polish kit</span>
+                </div>
+                <div class="flex gap-2">
+                  <a href="product-detail.html?id=forma-luxe-oxford" class="btn-secondary flex-1 text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Forma Luxe Oxford">View Details</a>
+                  <button class="btn-primary flex-1 add-to-cart focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" 
+                          data-product-id="forma-luxe-oxford"
+                          data-product-name="Forma Luxe Oxford"
+                          data-product-price="$189"
+                          data-product-image="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60"
+                          data-product-category="Formal"
+                          aria-label="Add Forma Luxe Oxford to cart">Add to Cart</button>
+                </div>
+              </div>
+
+              <div class="product-card card tilt-card" data-name="Halo Court" data-price="$139" data-category="Athletic" data-rating="4.5" data-sizes="UK 6-11" data-colors="White, Navy" data-description="Court-ready leather sneaker with cushioned heel pod." data-image="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60" data-fit-score="91">
+                <div class="product-card-media mb-4">
+                  <img src="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60" alt="Halo Court athletic shoe" class="rounded-2xl h-48 w-full object-cover" loading="lazy">
+                  <span class="product-chip">Court ready</span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 class="font-semibold text-lg dark:text-white">Halo Court</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Court-ready leather sneaker with cushioned heel pod.</p>
+                  </div>
+                  <span class="text-purple-600 dark:text-purple-400 font-semibold">$139</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Athletic</span>
+                  <span class="fit-score" aria-label="Fit confidence score">AI Fit 91%</span>
+                </div>
+                <ul class="product-meta text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <li><span>Sizes:</span><span>UK 6-11</span></li>
+                  <li><span>Colors:</span><span>White, Navy</span></li>
+                </ul>
+                <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 mb-4">
+                  <span class="logistics-pill">Impact guard heel</span>
+                  <span class="logistics-pill">Free returns</span>
+                </div>
+                <div class="flex gap-2">
+                  <a href="product-detail.html?id=halo-court" class="btn-secondary flex-1 text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Halo Court">View Details</a>
+                  <button class="btn-primary flex-1 add-to-cart focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" 
+                          data-product-id="halo-court"
+                          data-product-name="Halo Court"
+                          data-product-price="$139"
+                          data-product-image="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60"
+                          data-product-category="Athletic"
+                          aria-label="Add Halo Court to cart">Add to Cart</button>
+                </div>
+              </div>
+
+              <div class="product-card card tilt-card" data-name="Nimbus Glide" data-price="$159" data-category="Running" data-rating="4.8" data-sizes="UK 6-12" data-colors="Silver, Neon Lime" data-description="Energy-return midsole with breathable engineered mesh." data-image="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60" data-fit-score="95">
+                <div class="product-card-media mb-4">
+                  <img src="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60" alt="Nimbus Glide running shoe" class="rounded-2xl h-48 w-full object-cover" loading="lazy">
+                  <span class="product-chip">Best for tempo</span>
+                </div>
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 class="font-semibold text-lg dark:text-white">Nimbus Glide</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Energy-return midsole with breathable engineered mesh.</p>
+                  </div>
+                  <span class="text-purple-600 dark:text-purple-400 font-semibold">$159</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+                  <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Running</span>
+                  <span class="fit-score" aria-label="Fit confidence score">AI Fit 95%</span>
+                </div>
+                <ul class="product-meta text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  <li><span>Sizes:</span><span>UK 6-12</span></li>
+                  <li><span>Colors:</span><span>Silver, Neon Lime</span></li>
+                </ul>
+                <div class="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 mb-4">
+                  <span class="logistics-pill">Energy return midsole</span>
+                  <span class="logistics-pill">Free exchanges</span>
+                </div>
+                <div class="flex gap-2">
+                  <a href="product-detail.html?id=nimbus-glide" class="btn-secondary flex-1 text-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Nimbus Glide">View Details</a>
+                  <button class="btn-primary flex-1 add-to-cart focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" 
+                          data-product-id="nimbus-glide"
+                          data-product-name="Nimbus Glide"
+                          data-product-price="$159"
+                          data-product-image="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60"
+                          data-product-category="Running"
+                          aria-label="Add Nimbus Glide to cart">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 py-10">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">AI fit and 3D for confident shopping.</p>
+        </div>
+      </div>
+      <div class="flex gap-6 text-sm text-slate-600 dark:text-slate-400">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Product Modal -->
+  <div id="product-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-describedby="modal-description">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+        <div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Product Details</p>
+          <h3 id="modal-name" class="text-xl font-semibold dark:text-white"></h3>
+        </div>
+        <button id="modal-close" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Close product details modal">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 p-6">
+        <img id="modal-image" src="" alt="" class="rounded-2xl object-cover w-full h-64" loading="lazy">
+        <div class="space-y-3">
+          <p id="modal-description" class="text-sm text-slate-600 dark:text-slate-300"></p>
+          <p class="text-lg font-semibold text-purple-600 dark:text-purple-400" id="modal-price"></p>
+          <div class="flex gap-2 text-xs text-slate-600 dark:text-slate-300">
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 dark:text-slate-300" id="modal-category"></span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 dark:text-slate-300" id="modal-rating"></span>
+          </div>
+          <p class="text-sm dark:text-slate-300"><strong class="dark:text-white">Sizes:</strong> <span id="modal-sizes" class="dark:text-slate-300"></span></p>
+          <p class="text-sm dark:text-slate-300"><strong class="dark:text-white">Colors:</strong> <span id="modal-colors" class="dark:text-slate-300"></span></p>
+          <button id="modal-view-3d" class="btn-primary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View this product in 3D">View in 3D</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentication Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="auth-title" class="text-xl font-semibold dark:text-white">Sign In</h3>
+        <button id="close-auth-modal" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Close authentication modal">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <div id="auth-error" class="hidden mb-4 p-3 rounded-lg bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm"></div>
+        
+        <!-- Sign In Form -->
+        <form id="signin-form" class="space-y-4">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="current-password" minlength="6">
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign In</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="space-y-4 hidden">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Full Name
+            <input type="text" name="name" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="John Doe" autocomplete="name">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="new-password" minlength="6">
+            <span class="text-xs text-slate-500 dark:text-slate-400">Minimum 6 characters</span>
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Up</button>
+        </form>
+
+        <div class="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
+          <span id="switch-auth-text">Already have an account?</span>
+          <button id="switch-auth-link" class="text-purple-600 dark:text-purple-400 font-semibold hover:underline ml-1 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Selection Modal -->
+  <div id="size-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="size-modal-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="size-modal-title" class="text-xl font-semibold dark:text-white">Select Size</h3>
+        <button id="size-modal-close" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500" aria-label="Close size selection">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <p id="size-modal-product" class="text-sm text-slate-600 dark:text-slate-400 mb-4"></p>
+        <div id="size-options" class="grid grid-cols-4 gap-2 mb-4">
+          <!-- Sizes will be populated dynamically -->
+        </div>
+        <div class="flex gap-3">
+          <button id="size-modal-cancel" class="btn-secondary flex-1">Cancel</button>
+          <button id="size-modal-add" class="btn-primary flex-1" disabled>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Sidebar (Mobile) -->
+  <div id="filter-sidebar" class="fixed top-0 left-0 h-full w-80 bg-white dark:bg-slate-800 shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold dark:text-white">Filters</h2>
+        <button id="close-filters" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-500" aria-label="Close filters">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="mb-6">
+        <h3 class="font-semibold text-sm mb-3 dark:text-white">Category</h3>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="filter-category" value="Running" checked>
+            <span class="text-sm dark:text-slate-300">Running</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="filter-category" value="Casual" checked>
+            <span class="text-sm dark:text-slate-300">Casual</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="filter-category" value="Formal" checked>
+            <span class="text-sm dark:text-slate-300">Formal</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="filter-category" value="Trail" checked>
+            <span class="text-sm dark:text-slate-300">Trail</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="filter-category" value="Athletic" checked>
+            <span class="text-sm dark:text-slate-300">Athletic</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Price Filter -->
+      <div class="mb-6">
+        <h3 class="font-semibold text-sm mb-3 dark:text-white">Price Range</h3>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="price-filter" class="filter-price" value="0-150" checked>
+            <span class="text-sm dark:text-slate-300">Under $150</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="price-filter" class="filter-price" value="150-200">
+            <span class="text-sm dark:text-slate-300">$150 - $200</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="price-filter" class="filter-price" value="200+">
+            <span class="text-sm dark:text-slate-300">Over $200</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="price-filter" class="filter-price" value="all">
+            <span class="text-sm dark:text-slate-300">All Prices</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="mb-6">
+        <h3 class="font-semibold text-sm mb-3 dark:text-white">Sort By</h3>
+        <select id="sort-options-mobile" class="form-input w-full dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+          <option value="default">Default</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="name">Name: A to Z</option>
+          <option value="rating">Rating: High to Low</option>
+        </select>
+      </div>
+
+      <button id="clear-filters-mobile" class="btn-secondary w-full">Clear All Filters</button>
+    </div>
+  </div>
+
+  <div id="filter-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+
+  <!-- Filter Toggle Button (Mobile) -->
+  <button id="filter-toggle" class="fixed bottom-6 right-6 lg:hidden w-14 h-14 rounded-full bg-purple-600 text-white shadow-lg flex items-center justify-center hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 z-40" aria-label="Open filters">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+    </svg>
+  </button>
+
+  <script src="js/cart.js"></script>
+  <script src="js/cart-ui.js"></script>
+  <script src="js/search.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
