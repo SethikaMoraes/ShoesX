@@ -5,54 +5,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="ShoesX - AI-powered footwear sizing with 3D product visualization. Find your perfect fit every time.">
   <title>ShoesX - E-commerce Footwear with 3D & AI Fit</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Set theme immediately to prevent flash
+    (function() {
+      // If no theme is set, explicitly set light mode
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', 'light');
+      }
+      
+      const theme = localStorage.getItem('theme');
+      const htmlElement = document.documentElement;
+      
+      // Set data-theme attribute
+      htmlElement.setAttribute('data-theme', theme);
+      
+      // Add/remove dark class from html (body will be handled when it loads)
+      if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+      } else {
+        htmlElement.classList.remove('dark');
+      }
+      
+      // Wait for body to be available, then apply class
+      if (document.body) {
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+        } else {
+          document.body.classList.remove('dark');
+        }
+      } else {
+        // If body doesn't exist yet, wait for DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+          if (theme === 'dark') {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.remove('dark');
+          }
+        });
+      }
+    })();
+  </script>
 </head>
-<body class="bg-slate-50 text-slate-900 font-[Space_Grotesk]">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-[Space_Grotesk]">
   <!-- Skip to main content link -->
   <a href="#home" class="skip-link">Skip to main content</a>
   <!-- Sticky Navbar -->
-  <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-slate-50/70 border-b border-slate-200" role="banner">
-    <nav class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between" role="navigation" aria-label="Main navigation">
-      <div class="flex items-center gap-2">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-bold shadow-lg" aria-hidden="true">SX</div>
-        <span class="text-xl font-semibold">ShoesX</span>
+  <header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-slate-50/95 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-700 overflow-hidden" role="banner">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between" role="navigation" aria-label="Main navigation">
+      <!-- Logo and Brand -->
+      <a href="#home" class="flex items-center gap-0 flex-shrink-0">
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
+      </a>
+      
+      <!-- Centered Navigation Links -->
+      <div class="hidden lg:flex items-center gap-8 text-base font-medium flex-1 justify-center" role="menubar">
+        <a href="#home" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Home</a>
+        <a href="#shop" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Shop</a>
+        <a href="#how-it-works" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">How It Works</a>
+        <a href="#fit" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Fit Assurance</a>
+        <a href="#viewer" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">3D View</a>
+        <a href="#contact" class="nav-link hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-3 py-2 transition-colors" role="menuitem">Contact</a>
       </div>
-      <div class="hidden lg:flex items-center gap-6 text-sm font-medium" role="menubar">
-        <a href="#home" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
-        <a href="#how-it-works" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">How It Works</a>
-        <a href="#shop" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
-        <a href="#fit" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
-        <a href="#viewer" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
-        <a href="#analytics" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Analytics</a>
-        <a href="#contact" class="nav-link hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Contact</a>
+      
+      <!-- Right Side Actions -->
+      <div class="hidden lg:flex items-center gap-3 flex-shrink-0">
+        <button id="theme-toggle" class="w-11 h-11 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all" aria-label="Toggle dark mode">
+          <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+        <button data-action="signin" class="btn-secondary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+        <button data-action="signup" class="btn-primary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        <div id="user-menu" class="hidden flex items-center gap-2">
+          <span id="user-name" class="text-sm font-medium"></span>
+          <button id="signout-btn" class="btn-secondary px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
+        </div>
       </div>
-      <div class="hidden lg:flex items-center gap-3">
-        <button class="btn-secondary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
-        <button class="btn-primary px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
-      </div>
-      <button id="menu-toggle" class="lg:hidden w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <button id="menu-toggle" class="lg:hidden w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
     </nav>
     <div id="mobile-menu" class="lg:hidden hidden px-4 pb-4" role="menu" aria-label="Mobile navigation menu">
-      <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 space-y-3">
-        <a href="#home" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
-        <a href="#how-it-works" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">How It Works</a>
-        <a href="#shop" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
-        <a href="#fit" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
-        <a href="#viewer" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
-        <a href="#analytics" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Analytics</a>
-        <a href="#contact" class="nav-link block focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Contact</a>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-4 space-y-3">
+        <a href="#home" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Home</a>
+        <a href="#how-it-works" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">How It Works</a>
+        <a href="#shop" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Shop</a>
+        <a href="#fit" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Fit Assurance</a>
+        <a href="#viewer" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">3D View</a>
+        <a href="#analytics" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Analytics</a>
+        <a href="#contact" class="nav-link block focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1" role="menuitem">Contact</a>
         <div class="flex gap-2 pt-2">
-          <button class="btn-secondary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
-          <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+          <button data-action="signin" class="btn-secondary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Sign in to your account">Sign In</button>
+          <button data-action="signup" class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Create a new account">Sign Up</button>
+        </div>
+        <div id="mobile-user-menu" class="hidden pt-2 border-t border-slate-200">
+          <p id="mobile-user-name" class="text-sm font-medium mb-2"></p>
+          <button id="mobile-signout-btn" class="btn-secondary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Out</button>
         </div>
       </div>
     </div>
@@ -67,25 +129,29 @@
         <div class="hero-badge badge-lg left-12 bottom-10">UK 8 | Wide</div>
         <div class="hero-badge badge-lg right-12 bottom-14">US 9 | Regular</div>
         <div class="flex-1 space-y-6 fade-hero">
-          <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 text-emerald-700 text-xs font-semibold border border-emerald-100 shadow-sm">Powered by AI Fit Assurance</p>
-          <h1 class="text-4xl md:text-5xl font-bold leading-tight">Find Your Perfect Fit. Every Time.</h1>
-          <p class="text-base text-slate-700 max-w-xl">ShoesX blends AI sizing intelligence with immersive 3D product visualization so you know the fit, feel, and look before checkout.</p>
+          <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 text-purple-700 text-xs font-semibold border border-purple-100 shadow-sm">Powered by AI Fit Assurance</p>
+          <h1 class="text-4xl md:text-5xl font-bold leading-tight dark:text-white">Find Your Perfect Fit. Every Time.</h1>
+          <p class="text-base text-slate-700 dark:text-slate-300 max-w-xl">ShoesX blends AI sizing intelligence with immersive 3D product visualization so you know the fit, feel, and look before checkout.</p>
           <div class="flex flex-col sm:flex-row gap-3">
-            <button class="btn-primary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Find your perfect shoe size using AI">Find My Size</button>
-            <button class="btn-secondary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Browse our shoe collection">Explore Collection</button>
+            <button class="btn-primary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Find your perfect shoe size using AI">Find My Size</button>
+            <button class="btn-secondary px-6 py-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Browse our shoe collection">Explore Collection</button>
           </div>
         </div>
         <div class="flex-1 w-full fade-hero">
           <div class="bg-white/60 rounded-3xl border border-slate-100 shadow-xl p-4 backdrop-blur">
             <div id="hero-3d-container" class="w-full h-64 md:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 relative">
-              <model-viewer id="hero-viewer" src="shoe.glb" alt="3D Shoe Model" auto-rotate camera-controls class="w-full h-full" loading="lazy" aria-label="Interactive 3D shoe model"></model-viewer>
+               <model-viewer id="hero-viewer" src="models/shoe.glb" alt="3D Shoe Model" auto-rotate camera-controls class="w-full h-full" loading="eager" reveal="auto" aria-label="Interactive 3D shoe model" environment-image="neutral" exposure="1" shadow-intensity="1"></model-viewer>
               <div id="hero-3d-fallback" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 hidden">
-                <div class="text-center p-6">
-                  <svg class="w-24 h-24 mx-auto mb-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  <p class="text-slate-600 font-semibold">3D Model Preview</p>
-                  <p class="text-sm text-slate-500 mt-2">Interactive 3D viewer will appear here</p>
+                <div class="loading-container">
+                  <div class="loading-spinner loading-spinner-lg"></div>
+                  <div class="text-center">
+                    <p class="text-slate-700 dark:text-slate-300 font-semibold loading-text">Loading 3D Model</p>
+                    <div class="loading-dots mt-2">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,42 +164,42 @@
     <section id="how-it-works" class="max-w-6xl mx-auto px-4 py-16 md:py-20">
       <div class="flex items-center justify-between mb-10">
         <div>
-          <p class="text-emerald-600 font-semibold text-sm">Smart Sizing</p>
-          <h2 class="text-3xl md:text-4xl font-bold">How ShoesX Works</h2>
+          <p class="text-purple-600 font-semibold text-sm">Smart Sizing</p>
+          <h2 class="text-3xl md:text-4xl font-bold dark:text-white">How ShoesX Works</h2>
         </div>
-        <span class="text-xs text-slate-500 hidden md:inline">Predict / Visualize / Buy Confidently</span>
+        <span class="text-xs text-slate-500 dark:text-slate-400 hidden md:inline">Predict / Visualize / Buy Confidently</span>
       </div>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="card step-card">
-          <div class="icon-circle bg-emerald-100 text-emerald-700">1</div>
-          <h3 class="font-semibold text-lg">Enter Foot Profile</h3>
-          <p class="text-sm text-slate-600">Add gender, foot length, and width to calibrate your baseline.</p>
+          <div class="icon-circle bg-purple-100 text-purple-700">1</div>
+          <h3 class="font-semibold text-lg dark:text-white">Enter Foot Profile</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">Add gender, foot length, and width to calibrate your baseline.</p>
         </div>
         <div class="card step-card">
-          <div class="icon-circle bg-cyan-100 text-cyan-700">2</div>
-          <h3 class="font-semibold text-lg">Pick Category</h3>
-          <p class="text-sm text-slate-600">Sneakers, formal, running, or sport-specific silhouettes.</p>
+          <div class="icon-circle bg-orange-100 text-orange-700">2</div>
+          <h3 class="font-semibold text-lg dark:text-white">Pick Category</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">Sneakers, formal, running, or sport-specific silhouettes.</p>
         </div>
         <div class="card step-card">
           <div class="icon-circle bg-amber-100 text-amber-700">3</div>
-          <h3 class="font-semibold text-lg">AI Predicts Size</h3>
-          <p class="text-sm text-slate-600">Get best-fit sizing with confidence and return-risk insights.</p>
+          <h3 class="font-semibold text-lg dark:text-white">AI Predicts Size</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">Get best-fit sizing with confidence and return-risk insights.</p>
         </div>
         <div class="card step-card">
           <div class="icon-circle bg-indigo-100 text-indigo-700">4</div>
-          <h3 class="font-semibold text-lg">Preview in 3D</h3>
-          <p class="text-sm text-slate-600">Rotate, zoom, and see materials before you add to cart.</p>
+          <h3 class="font-semibold text-lg dark:text-white">Preview in 3D</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300">Rotate, zoom, and see materials before you add to cart.</p>
         </div>
       </div>
     </section>
 
     <!-- Shop -->
-    <section id="shop" class="bg-white py-16 md:py-20">
+    <section id="shop" class="bg-slate-50 dark:bg-slate-900 py-16 md:py-20">
       <div class="max-w-6xl mx-auto px-4 space-y-10">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-emerald-600 font-semibold text-sm">Shop</p>
-            <h2 class="text-3xl md:text-4xl font-bold">Featured Footwear</h2>
+            <p class="text-purple-600 font-semibold text-sm">Shop</p>
+            <h2 class="text-3xl md:text-4xl font-bold dark:text-white">Featured Footwear</h2>
           </div>
           <button class="btn-secondary hidden md:inline-flex">View All</button>
         </div>
@@ -141,91 +207,91 @@
           <div class="product-card card tilt-card" data-name="AeroFlex Runner" data-price="$149" data-category="Running" data-rating="4.8" data-sizes="UK 6-11" data-colors="Graphite, Arctic Blue" data-description="Lightweight knit runner with carbon-infused midsole." data-image="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60">
             <img src="https://images.unsplash.com/photo-1528701800489-20be9c1e74bb?auto=format&fit=crop&w=900&q=60" alt="AeroFlex Runner running shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg">AeroFlex Runner</h3>
-              <span class="text-emerald-600 font-semibold">$149</span>
+              <h3 class="font-semibold text-lg dark:text-white">AeroFlex Runner</h3>
+              <span class="text-purple-600 dark:text-purple-400 font-semibold">$149</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100">Running</span>
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Running</span>
               <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
             </div>
             <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View details for AeroFlex Runner">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Add AeroFlex Runner to cart">Add to Cart</button>
+              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for AeroFlex Runner">View Details</button>
+              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add AeroFlex Runner to cart">Add to Cart</button>
             </div>
           </div>
           <div class="product-card card tilt-card" data-name="Pulse Knit Sneaker" data-price="$129" data-category="Casual" data-rating="4.7" data-sizes="UK 5-10" data-colors="Black, Sand" data-description="Breathable knit upper with adaptive foam cushioning." data-image="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60">
             <img src="https://images.unsplash.com/photo-1514986888952-8cd320577b68?auto=format&fit=crop&w=900&q=60" alt="Pulse Knit Sneaker casual shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg">Pulse Knit Sneaker</h3>
-              <span class="text-emerald-600 font-semibold">$129</span>
+              <h3 class="font-semibold text-lg dark:text-white">Pulse Knit Sneaker</h3>
+              <span class="text-purple-600 dark:text-purple-400 font-semibold">$129</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100">Casual</span>
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Casual</span>
               <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
             </div>
             <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View details for Pulse Knit Sneaker">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Add Pulse Knit Sneaker to cart">Add to Cart</button>
+              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Pulse Knit Sneaker">View Details</button>
+              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Pulse Knit Sneaker to cart">Add to Cart</button>
             </div>
           </div>
           <div class="product-card card tilt-card" data-name="Vertex Trail Pro" data-price="$169" data-category="Trail" data-rating="4.9" data-sizes="UK 7-12" data-colors="Olive, Burnt Orange" data-description="Aggressive outsole with waterproof mesh upper." data-image="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60">
             <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=60" alt="Vertex Trail Pro trail running shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg">Vertex Trail Pro</h3>
-              <span class="text-emerald-600 font-semibold">$169</span>
+              <h3 class="font-semibold text-lg dark:text-white">Vertex Trail Pro</h3>
+              <span class="text-purple-600 dark:text-purple-400 font-semibold">$169</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100">Trail</span>
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Trail</span>
               <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             </div>
             <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View details for Vertex Trail Pro">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Add Vertex Trail Pro to cart">Add to Cart</button>
+              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Vertex Trail Pro">View Details</button>
+              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Vertex Trail Pro to cart">Add to Cart</button>
             </div>
           </div>
           <div class="product-card card tilt-card" data-name="Forma Luxe Oxford" data-price="$189" data-category="Formal" data-rating="4.6" data-sizes="UK 6-12" data-colors="Chestnut, Midnight" data-description="Hand-finished leather upper with memory foam insole." data-image="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60">
             <img src="https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=900&q=60" alt="Forma Luxe Oxford formal shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg">Forma Luxe Oxford</h3>
-              <span class="text-emerald-600 font-semibold">$189</span>
+              <h3 class="font-semibold text-lg dark:text-white">Forma Luxe Oxford</h3>
+              <span class="text-purple-600 dark:text-purple-400 font-semibold">$189</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100">Formal</span>
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Formal</span>
               <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
             </div>
             <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View details for Forma Luxe Oxford">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Add Forma Luxe Oxford to cart">Add to Cart</button>
+              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Forma Luxe Oxford">View Details</button>
+              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Forma Luxe Oxford to cart">Add to Cart</button>
             </div>
           </div>
           <div class="product-card card tilt-card" data-name="Halo Court" data-price="$139" data-category="Athletic" data-rating="4.5" data-sizes="UK 6-11" data-colors="White, Navy" data-description="Court-ready leather sneaker with cushioned heel pod." data-image="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60">
             <img src="https://images.unsplash.com/photo-1549298916-5a8b0c6908d1?auto=format&fit=crop&w=900&q=60" alt="Halo Court athletic shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg">Halo Court</h3>
-              <span class="text-emerald-600 font-semibold">$139</span>
+              <h3 class="font-semibold text-lg dark:text-white">Halo Court</h3>
+              <span class="text-purple-600 dark:text-purple-400 font-semibold">$139</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100">Athletic</span>
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Athletic</span>
               <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
             </div>
             <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View details for Halo Court">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Add Halo Court to cart">Add to Cart</button>
+              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Halo Court">View Details</button>
+              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Halo Court to cart">Add to Cart</button>
             </div>
           </div>
           <div class="product-card card tilt-card" data-name="Nimbus Glide" data-price="$159" data-category="Running" data-rating="4.8" data-sizes="UK 6-12" data-colors="Silver, Neon Lime" data-description="Energy-return midsole with breathable engineered mesh." data-image="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60">
             <img src="https://images.unsplash.com/photo-1549298916-12346510946f?auto=format&fit=crop&w=900&q=60" alt="Nimbus Glide running shoe" class="rounded-2xl h-48 w-full object-cover mb-4" loading="lazy">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-semibold text-lg">Nimbus Glide</h3>
-              <span class="text-emerald-600 font-semibold">$159</span>
+              <h3 class="font-semibold text-lg dark:text-white">Nimbus Glide</h3>
+              <span class="text-purple-600 dark:text-purple-400 font-semibold">$159</span>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-500 mb-3">
-              <span class="px-3 py-1 rounded-full bg-slate-100">Running</span>
+            <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-3">
+              <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700">Running</span>
               <span class="text-amber-500">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             </div>
             <div class="flex gap-2">
-              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View details for Nimbus Glide">View Details</button>
-              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Add Nimbus Glide to cart">Add to Cart</button>
+              <button class="btn-secondary flex-1 view-details focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View details for Nimbus Glide">View Details</button>
+              <button class="btn-primary flex-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Add Nimbus Glide to cart">Add to Cart</button>
             </div>
           </div>
         </div>
@@ -236,47 +302,47 @@
     <section id="fit" class="max-w-6xl mx-auto px-4 py-16 md:py-20">
       <div class="grid lg:grid-cols-2 gap-10 items-start">
         <div>
-          <p class="text-emerald-600 font-semibold text-sm">AI Fit Assurance</p>
-          <h2 class="text-3xl md:text-4xl font-bold mb-3">Intelligent Fit Assurance</h2>
-          <p class="text-slate-600 mb-6">Simulate size recommendations instantly. No backend needed-ShoesX previews the experience your shoppers will love.</p>
+          <p class="text-purple-600 font-semibold text-sm">AI Fit Assurance</p>
+          <h2 class="text-3xl md:text-4xl font-bold mb-3 dark:text-white">Intelligent Fit Assurance</h2>
+          <p class="text-slate-600 dark:text-slate-300 mb-6">Simulate size recommendations instantly. No backend needed-ShoesX previews the experience your shoppers will love.</p>
           <div class="card">
             <form id="fit-form" class="space-y-4" novalidate aria-label="AI Fit Assurance Form">
               <div class="grid sm:grid-cols-2 gap-4">
-                <label class="flex flex-col gap-2 text-sm font-medium">
+                <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
                   Gender
-                  <select name="gender" class="form-input" aria-required="true" aria-describedby="gender-error">
+                  <select name="gender" class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" aria-required="true" aria-describedby="gender-error">
                     <option value="">Select gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                   </select>
-                  <span id="gender-error" class="error-message hidden text-xs text-rose-600"></span>
+                  <span id="gender-error" class="error-message hidden text-xs text-rose-600 dark:text-rose-400"></span>
                 </label>
-                <label class="flex flex-col gap-2 text-sm font-medium">
+                <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
                   Foot Length (cm)
-                  <input name="length" type="number" step="0.1" min="10" max="40" required class="form-input" placeholder="26.5" aria-required="true" aria-describedby="length-error" aria-label="Foot length in centimeters">
-                  <span id="length-error" class="error-message hidden text-xs text-rose-600"></span>
+                  <input name="length" type="number" step="0.1" min="10" max="40" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="26.5" aria-required="true" aria-describedby="length-error" aria-label="Foot length in centimeters">
+                  <span id="length-error" class="error-message hidden text-xs text-rose-600 dark:text-rose-400"></span>
                 </label>
               </div>
               <div class="grid sm:grid-cols-2 gap-4">
-                <label class="flex flex-col gap-2 text-sm font-medium">
+                <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
                   Foot Width (cm)
-                  <input name="width" type="number" step="0.1" min="5" max="20" required class="form-input" placeholder="9.8" aria-required="true" aria-describedby="width-error" aria-label="Foot width in centimeters">
-                  <span id="width-error" class="error-message hidden text-xs text-rose-600"></span>
+                  <input name="width" type="number" step="0.1" min="5" max="20" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="9.8" aria-required="true" aria-describedby="width-error" aria-label="Foot width in centimeters">
+                  <span id="width-error" class="error-message hidden text-xs text-rose-600 dark:text-rose-400"></span>
                 </label>
-                <label class="flex flex-col gap-2 text-sm font-medium">
+                <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
                   Preferred Category
-                  <select name="category" class="form-input" aria-required="true" aria-describedby="category-error">
+                  <select name="category" class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" aria-required="true" aria-describedby="category-error">
                     <option value="">Select category</option>
                     <option value="Running">Running</option>
                     <option value="Casual">Casual</option>
                     <option value="Formal">Formal</option>
                     <option value="Sports">Sports</option>
                   </select>
-                  <span id="category-error" class="error-message hidden text-xs text-rose-600"></span>
+                  <span id="category-error" class="error-message hidden text-xs text-rose-600 dark:text-rose-400"></span>
                 </label>
               </div>
-              <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Calculate your best fit size">Get My Best Fit</button>
+              <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Calculate your best fit size">Get My Best Fit</button>
             </form>
             <div id="fit-result" class="mt-6 hidden" role="status" aria-live="polite" aria-atomic="true">
               <div class="result-card">
@@ -285,8 +351,8 @@
                   <span id="size-output" class="text-xl font-semibold"></span>
                   <span id="risk-badge" class="px-3 py-1 rounded-full text-xs font-semibold"></span>
                 </div>
-                <p id="confidence-output" class="text-sm text-slate-600"></p>
-                <p id="return-output" class="text-sm text-slate-600"></p>
+                <p id="confidence-output" class="text-sm text-slate-600 dark:text-slate-300"></p>
+                <p id="return-output" class="text-sm text-slate-600 dark:text-slate-300"></p>
               </div>
             </div>
           </div>
@@ -294,7 +360,7 @@
         <div class="card bg-gradient-to-br from-slate-900 to-slate-800 text-white">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <p class="text-emerald-300 text-xs font-semibold uppercase tracking-wide">Real-time fit</p>
+              <p class="text-orange-300 text-xs font-semibold uppercase tracking-wide">Real-time fit</p>
               <h3 class="text-2xl font-semibold">Confidence Dashboard</h3>
             </div>
             <div class="px-3 py-1 rounded-full bg-white/10 text-xs">Beta</div>
@@ -305,20 +371,20 @@
               <span class="font-semibold">92%</span>
             </div>
             <div class="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-              <div class="h-2 bg-emerald-400 rounded-full w-[92%]"></div>
+              <div class="h-2 bg-orange-400 rounded-full w-[92%]"></div>
             </div>
             <div class="grid grid-cols-3 gap-3 text-sm text-slate-200 pt-4">
               <div class="bg-white/10 rounded-xl p-3">
                 <p class="text-xs text-slate-300">Return Risk</p>
-                <p class="font-semibold text-emerald-300">Low</p>
+                <p class="font-semibold text-orange-300">Low</p>
               </div>
               <div class="bg-white/10 rounded-xl p-3">
                 <p class="text-xs text-slate-300">Top Size</p>
-                <p class="font-semibold text-emerald-300">UK 8</p>
+                <p class="font-semibold text-orange-300">UK 8</p>
               </div>
               <div class="bg-white/10 rounded-xl p-3">
                 <p class="text-xs text-slate-300">Category</p>
-                <p class="font-semibold text-emerald-300">Running</p>
+                <p class="font-semibold text-orange-300">Running</p>
               </div>
             </div>
             <p class="text-xs text-slate-300 pt-2">Data simulated to show how ShoesX reduces returns while improving buyer confidence.</p>
@@ -328,28 +394,32 @@
     </section>
 
     <!-- 3D Viewer -->
-    <section id="viewer" class="bg-white py-16 md:py-20">
+    <section id="viewer" class="bg-slate-50 dark:bg-slate-900 py-16 md:py-20">
       <div class="max-w-6xl mx-auto px-4 space-y-8">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <p class="text-emerald-600 font-semibold text-sm">3D Product Viewer</p>
-            <h2 class="text-3xl md:text-4xl font-bold">View Every Angle</h2>
-            <p class="text-slate-600 mt-2">Powered by 3D models generated from product images (Meshy API in backend).</p>
+            <p class="text-purple-600 font-semibold text-sm">3D Product Viewer</p>
+            <h2 class="text-3xl md:text-4xl font-bold dark:text-white">View Every Angle</h2>
+            <p class="text-slate-600 dark:text-slate-300 mt-2">Powered by 3D models generated from product images (Meshy API in backend).</p>
           </div>
-          <button class="btn-secondary focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View product in augmented reality">View in AR</button>
+          <button class="btn-secondary focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View product in augmented reality">View in AR</button>
         </div>
         <div class="card">
           <div class="flex flex-col lg:flex-row gap-8">
             <div class="flex-1 bg-slate-100 rounded-2xl p-4">
               <div id="viewer-3d-container" class="w-full h-80 bg-white rounded-xl relative">
-                <model-viewer id="main-viewer" src="shoe.glb" alt="3D Shoe Model" camera-controls auto-rotate class="w-full h-full" loading="lazy" aria-label="Interactive 3D shoe model viewer"></model-viewer>
+                 <model-viewer id="main-viewer" src="models/shoe.glb" alt="3D Shoe Model" camera-controls auto-rotate class="w-full h-full" loading="eager" reveal="auto" aria-label="Interactive 3D shoe model viewer" environment-image="neutral" exposure="1" shadow-intensity="1"></model-viewer>
                 <div id="viewer-3d-fallback" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl hidden">
-                  <div class="text-center p-6">
-                    <svg class="w-20 h-20 mx-auto mb-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <p class="text-slate-600 font-semibold">3D Model Viewer</p>
-                    <p class="text-sm text-slate-500 mt-2">Select a model below to view</p>
+                  <div class="loading-container">
+                    <div class="loading-spinner loading-spinner-lg"></div>
+                    <div class="text-center">
+                      <p class="text-slate-700 dark:text-slate-300 font-semibold loading-text">Loading 3D Model</p>
+                      <div class="loading-dots mt-2">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -357,12 +427,12 @@
             <div class="w-full lg:w-64 space-y-3">
               <h3 class="font-semibold text-lg">Switch Model</h3>
               <div class="grid grid-cols-3 lg:grid-cols-2 gap-3" role="group" aria-label="3D model selection">
-                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" data-src="shoe.glb" aria-label="View runner shoe model" aria-pressed="true">Runner</button>
-                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" data-src="formal.glb" aria-label="View formal shoe model" aria-pressed="false">Formal</button>
-                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" data-src="trail.glb" aria-label="View trail shoe model" aria-pressed="false">Trail</button>
-                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" data-src="court.glb" aria-label="View court shoe model" aria-pressed="false">Court</button>
+                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" data-src="models/shoe.glb" aria-label="View runner shoe model" aria-pressed="true">Runner</button>
+                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" data-src="models/formal.glb" aria-label="View formal shoe model" aria-pressed="false">Formal</button>
+                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" data-src="models/trail.glb" aria-label="View trail shoe model" aria-pressed="false">Trail</button>
+                <button class="thumb-btn focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" data-src="models/court.glb" aria-label="View court shoe model" aria-pressed="false">Court</button>
               </div>
-              <p class="text-sm text-slate-600 pt-1">Swap between model files to preview different silhouettes instantly.</p>
+              <p class="text-sm text-slate-600 dark:text-slate-300 pt-1">Swap between model files to preview different silhouettes instantly.</p>
             </div>
           </div>
         </div>
@@ -373,21 +443,21 @@
     <section id="analytics" class="max-w-6xl mx-auto px-4 py-16 md:py-20">
       <div class="flex items-center justify-between mb-8">
         <div>
-          <p class="text-emerald-600 font-semibold text-sm">Analytics Preview</p>
-          <h2 class="text-3xl md:text-4xl font-bold">Fit and Commerce Insights</h2>
+          <p class="text-purple-600 font-semibold text-sm">Analytics Preview</p>
+          <h2 class="text-3xl md:text-4xl font-bold dark:text-white">Fit and Commerce Insights</h2>
         </div>
-        <span class="text-xs text-slate-500 hidden md:inline">Admin teaser - Not live data</span>
+        <span class="text-xs text-slate-500 dark:text-slate-400 hidden md:inline">Admin teaser - Not live data</span>
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
         <div class="card">
           <div class="flex items-center justify-between mb-3">
             <h3 class="font-semibold text-lg">Fit Accuracy</h3>
-            <span class="text-sm text-emerald-600 font-semibold">88%</span>
+            <span class="text-sm text-purple-600 font-semibold">88%</span>
           </div>
           <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-            <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full w-[88%]"></div>
+            <div class="h-full bg-gradient-to-r from-purple-500 to-orange-500 rounded-full w-[88%]"></div>
           </div>
-          <p class="text-xs text-slate-500 mt-3">Higher accuracy means fewer returns and happier customers.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">Higher accuracy means fewer returns and happier customers.</p>
         </div>
         <div class="card space-y-4">
           <h3 class="font-semibold text-lg">Returns Reduced</h3>
@@ -434,22 +504,22 @@
     </section>
 
     <!-- Contact -->
-    <section id="contact" class="bg-white py-16 md:py-20">
+    <section id="contact" class="bg-slate-50 dark:bg-slate-900 py-16 md:py-20">
       <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
         <div class="flex-1 space-y-3">
-          <p class="text-emerald-600 font-semibold text-sm">Stay in the loop</p>
-          <h2 class="text-3xl md:text-4xl font-bold">Talk to ShoesX</h2>
-          <p class="text-slate-600 max-w-xl">Want to plug AI sizing into your catalog? Reach out and we will set up a fast pilot.</p>
+          <p class="text-purple-600 font-semibold text-sm">Stay in the loop</p>
+          <h2 class="text-3xl md:text-4xl font-bold dark:text-white">Talk to ShoesX</h2>
+          <p class="text-slate-600 dark:text-slate-300 max-w-xl">Want to plug AI sizing into your catalog? Reach out and we will set up a fast pilot.</p>
         </div>
         <div class="flex-1 w-full">
           <div class="card">
             <form id="contact-form" class="space-y-2" novalidate aria-label="Email subscription form">
-              <div class="flex gap-3">
+            <div class="flex gap-3">
                 <input type="email" placeholder="you@example.com" class="form-input flex-1" required aria-required="true" aria-label="Email address" aria-describedby="email-error">
-                <button type="submit" class="btn-primary px-6 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Subscribe to notifications">Notify Me</button>
-              </div>
+                <button type="submit" class="btn-primary px-6 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Subscribe to notifications">Notify Me</button>
+            </div>
               <span id="email-error" class="error-message hidden text-xs text-rose-600"></span>
-              <p class="text-xs text-slate-500 mt-2">No spam. Just product drops and sizing accuracy updates.</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">No spam. Just product drops and sizing accuracy updates.</p>
             </form>
           </div>
         </div>
@@ -458,16 +528,16 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-200 bg-slate-50 py-10">
+  <footer class="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 py-10">
     <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-bold shadow-lg">SX</div>
+        <img src="assets/logo.png" alt="ShoesX" class="h-12 object-contain">
+        <span class="text-xl font-bold text-slate-900 dark:text-slate-100">ShoesX</span>
         <div>
-          <p class="font-semibold">ShoesX</p>
-          <p class="text-xs text-slate-500">AI fit and 3D for confident shopping.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">AI fit and 3D for confident shopping.</p>
         </div>
       </div>
-      <div class="flex gap-6 text-sm text-slate-600">
+      <div class="flex gap-6 text-sm text-slate-600 dark:text-slate-400">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms</a>
         <a href="#">Support</a>
@@ -488,474 +558,84 @@
 
   <!-- Product Modal -->
   <div id="product-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-describedby="modal-description">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden">
-      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-100">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-100 dark:border-slate-700">
         <div>
-          <p class="text-xs text-slate-500">Product Details</p>
-          <h3 id="modal-name" class="text-xl font-semibold"></h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Product Details</p>
+          <h3 id="modal-name" class="text-xl font-semibold dark:text-white"></h3>
         </div>
-        <button id="modal-close" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="Close product details modal">
-          <span class="text-lg" aria-hidden="true">&times;</span>
+        <button id="modal-close" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Close product details modal">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="grid md:grid-cols-2 gap-6 p-6">
         <img id="modal-image" src="" alt="" class="rounded-2xl object-cover w-full h-64" loading="lazy">
         <div class="space-y-3">
-          <p id="modal-description" class="text-sm text-slate-600"></p>
-          <p class="text-lg font-semibold text-emerald-600" id="modal-price"></p>
-          <div class="flex gap-2 text-xs text-slate-600">
+          <p id="modal-description" class="text-sm text-slate-600 dark:text-slate-300"></p>
+          <p class="text-lg font-semibold text-purple-600 dark:text-purple-400" id="modal-price"></p>
+          <div class="flex gap-2 text-xs text-slate-600 dark:text-slate-300">
             <span class="px-3 py-1 rounded-full bg-slate-100" id="modal-category"></span>
             <span class="px-3 py-1 rounded-full bg-slate-100" id="modal-rating"></span>
           </div>
           <p class="text-sm"><strong>Sizes:</strong> <span id="modal-sizes"></span></p>
           <p class="text-sm"><strong>Colors:</strong> <span id="modal-colors"></span></p>
-          <button id="modal-view-3d" class="btn-primary w-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2" aria-label="View this product in 3D">View in 3D</button>
+          <button id="modal-view-3d" class="btn-primary w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="View this product in 3D">View in 3D</button>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    // Performance: Use requestAnimationFrame for animations
-    const raf = window.requestAnimationFrame || ((fn) => setTimeout(fn, 16));
-
-    // 3D Viewer Fallback Handler
-    function setup3DViewerFallback(viewerId, fallbackId) {
-      const viewer = document.getElementById(viewerId);
-      const fallback = document.getElementById(fallbackId);
-      
-      if (!viewer || !fallback) return;
-
-      // Check if model-viewer is supported
-      if (typeof customElements !== 'undefined' && customElements.get('model-viewer')) {
-        viewer.addEventListener('error', () => {
-          viewer.style.display = 'none';
-          fallback.classList.remove('hidden');
-        });
+  <!-- Authentication Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <h3 id="auth-title" class="text-xl font-semibold dark:text-white">Sign In</h3>
+        <button id="close-auth-modal" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" aria-label="Close authentication modal">
+          <span class="text-lg dark:text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <div id="auth-error" class="hidden mb-4 p-3 rounded-lg bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-sm"></div>
         
-        viewer.addEventListener('load', () => {
-          fallback.classList.add('hidden');
-          viewer.style.display = 'block';
-        });
+        <!-- Sign In Form -->
+        <form id="signin-form" class="space-y-4">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="current-password" minlength="6">
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign In</button>
+        </form>
 
-        // Check if model fails to load after 3 seconds
-        setTimeout(() => {
-          if (viewer.modelStatus === 'failed' || !viewer.loaded) {
-            viewer.style.display = 'none';
-            fallback.classList.remove('hidden');
-          }
-        }, 3000);
-      } else {
-        // model-viewer not supported
-        viewer.style.display = 'none';
-        fallback.classList.remove('hidden');
-      }
-    }
+        <!-- Sign Up Form -->
+        <form id="signup-form" class="space-y-4 hidden">
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Full Name
+            <input type="text" name="name" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="John Doe" autocomplete="name">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Email
+            <input type="email" name="email" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="flex flex-col gap-2 text-sm font-medium dark:text-slate-200">
+            Password
+            <input type="password" name="password" required class="form-input dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="••••••••" autocomplete="new-password" minlength="6">
+            <span class="text-xs text-slate-500 dark:text-slate-400">Minimum 6 characters</span>
+          </label>
+          <button type="submit" class="btn-primary w-full py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">Sign Up</button>
+        </form>
 
-    // Initialize 3D viewer fallbacks
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setup3DViewerFallback('hero-viewer', 'hero-3d-fallback');
-        setup3DViewerFallback('main-viewer', 'viewer-3d-fallback');
-      });
-    } else {
-      setup3DViewerFallback('hero-viewer', 'hero-3d-fallback');
-      setup3DViewerFallback('main-viewer', 'viewer-3d-fallback');
-    }
+        <div class="mt-4 text-center text-sm text-slate-600 dark:text-slate-400">
+          <span id="switch-auth-text">Already have an account?</span>
+          <button id="switch-auth-link" class="text-purple-600 dark:text-purple-400 font-semibold hover:underline ml-1 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    // Form Validation Helper
-    function showError(input, message) {
-      const errorId = input.getAttribute('aria-describedby');
-      const errorEl = document.getElementById(errorId);
-      if (errorEl) {
-        errorEl.textContent = message;
-        errorEl.classList.remove('hidden');
-      }
-      input.classList.add('border-rose-500');
-      input.setAttribute('aria-invalid', 'true');
-    }
-
-    function clearError(input) {
-      const errorId = input.getAttribute('aria-describedby');
-      const errorEl = document.getElementById(errorId);
-      if (errorEl) {
-        errorEl.textContent = '';
-        errorEl.classList.add('hidden');
-      }
-      input.classList.remove('border-rose-500');
-      input.removeAttribute('aria-invalid');
-    }
-
-    function validateFitForm() {
-      const form = document.getElementById('fit-form');
-      const gender = form.gender;
-      const length = form.length;
-      const width = form.width;
-      const category = form.category;
-      let isValid = true;
-
-      // Clear previous errors
-      [gender, length, width, category].forEach(clearError);
-
-      // Validate gender
-      if (!gender.value) {
-        showError(gender, 'Please select a gender');
-        isValid = false;
-      }
-
-      // Validate length
-      const lengthVal = parseFloat(length.value);
-      if (!length.value || isNaN(lengthVal)) {
-        showError(length, 'Please enter a valid foot length');
-        isValid = false;
-      } else if (lengthVal < 10 || lengthVal > 40) {
-        showError(length, 'Foot length must be between 10 and 40 cm');
-        isValid = false;
-      }
-
-      // Validate width
-      const widthVal = parseFloat(width.value);
-      if (!width.value || isNaN(widthVal)) {
-        showError(width, 'Please enter a valid foot width');
-        isValid = false;
-      } else if (widthVal < 5 || widthVal > 20) {
-        showError(width, 'Foot width must be between 5 and 20 cm');
-        isValid = false;
-      }
-
-      // Validate category
-      if (!category.value) {
-        showError(category, 'Please select a category');
-        isValid = false;
-      }
-
-      return isValid;
-    }
-
-    // Smooth scroll for nav links with performance optimization
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(link.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          const mobileMenu = document.getElementById('mobile-menu');
-          if (mobileMenu) {
-            mobileMenu.classList.add('hidden');
-            document.getElementById('menu-toggle').setAttribute('aria-expanded', 'false');
-          }
-        }
-      });
-    });
-
-    // Mobile menu toggle with accessibility
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (menuToggle && mobileMenu) {
-      menuToggle.addEventListener('click', () => {
-        const isHidden = mobileMenu.classList.toggle('hidden');
-        menuToggle.setAttribute('aria-expanded', !isHidden);
-      });
-
-      // Close menu on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
-          mobileMenu.classList.add('hidden');
-          menuToggle.setAttribute('aria-expanded', 'false');
-          menuToggle.focus();
-        }
-      });
-    }
-
-    // Page load hero animation (optimized)
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        raf(() => {
-          document.querySelectorAll('.fade-hero').forEach(el => el.classList.add('show'));
-        });
-      });
-    } else {
-      raf(() => {
-        document.querySelectorAll('.fade-hero').forEach(el => el.classList.add('show'));
-      });
-    }
-
-    // Intersection observer for sections (performance optimized)
-    const observerOptions = { 
-      threshold: 0.1,
-      rootMargin: '50px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          raf(() => {
-            entry.target.classList.add('show');
-            observer.unobserve(entry.target);
-          });
-        }
-      });
-    }, observerOptions);
-
-    // Observe elements with fade-up class
-    document.querySelectorAll('.card, section').forEach(el => {
-      el.classList.add('fade-up');
-      observer.observe(el);
-    });
-
-    // Modal logic with keyboard navigation
-    const modal = document.getElementById('product-modal');
-    const modalClose = document.getElementById('modal-close');
-    let previousActiveElement = null;
-
-    function openModal() {
-      previousActiveElement = document.activeElement;
-      modal.classList.remove('hidden');
-      modalClose.focus();
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      modal.classList.add('hidden');
-      document.body.style.overflow = '';
-      if (previousActiveElement) {
-        previousActiveElement.focus();
-      }
-    }
-
-    if (modalClose) {
-      modalClose.addEventListener('click', closeModal);
-    }
-
-    if (modal) {
-      modal.addEventListener('click', e => {
-        if (e.target === modal) closeModal();
-      });
-
-      // Close modal on Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-          closeModal();
-        }
-      });
-    }
-
-    document.querySelectorAll('.view-details').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const card = btn.closest('.product-card');
-        if (card && modal) {
-          document.getElementById('modal-name').textContent = card.dataset.name || '';
-          document.getElementById('modal-price').textContent = card.dataset.price || '';
-          document.getElementById('modal-category').textContent = card.dataset.category || '';
-          document.getElementById('modal-rating').textContent = (card.dataset.rating || '0') + ' / 5';
-          document.getElementById('modal-sizes').textContent = card.dataset.sizes || '';
-          document.getElementById('modal-colors').textContent = card.dataset.colors || '';
-          document.getElementById('modal-description').textContent = card.dataset.description || '';
-          const modalImage = document.getElementById('modal-image');
-          modalImage.src = card.dataset.image || '';
-          modalImage.alt = card.dataset.name || 'Product image';
-          openModal();
-        }
-      });
-    });
-
-    const modalView3d = document.getElementById('modal-view-3d');
-    if (modalView3d) {
-      modalView3d.addEventListener('click', () => {
-        closeModal();
-        const viewerSection = document.getElementById('viewer');
-        if (viewerSection) {
-          viewerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    }
-
-    // Fit Assurance form with validation
-    const fitForm = document.getElementById('fit-form');
-    const fitResult = document.getElementById('fit-result');
-    const sizeOutput = document.getElementById('size-output');
-    const confidenceOutput = document.getElementById('confidence-output');
-    const returnOutput = document.getElementById('return-output');
-    const riskBadge = document.getElementById('risk-badge');
-
-    if (fitForm) {
-      // Clear errors on input
-      fitForm.querySelectorAll('input, select').forEach(input => {
-        input.addEventListener('input', () => clearError(input));
-        input.addEventListener('change', () => clearError(input));
-      });
-
-      fitForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        if (!validateFitForm()) {
-          fitResult.classList.add('hidden');
-          // Focus first error field
-          const firstError = fitForm.querySelector('[aria-invalid="true"]');
-          if (firstError) {
-            firstError.focus();
-          }
-          return;
-        }
-
-        const length = parseFloat(fitForm.length.value);
-        const width = parseFloat(fitForm.width.value);
-        const gender = fitForm.gender.value;
-        const category = fitForm.category.value;
-
-        // Enhanced mock sizing logic
-        let size = 'UK 7';
-        if (length > 28.5) size = 'UK 10';
-        else if (length > 27) size = 'UK 9';
-        else if (length > 25.5) size = 'UK 8';
-        else if (length < 25) size = 'UK 6';
-        else if (length < 24) size = 'UK 5';
-
-        // Adjust for gender
-        if (gender === 'Female' && size.startsWith('UK')) {
-          const numSize = parseInt(size.split(' ')[1]);
-          size = `UK ${Math.max(3, numSize - 1.5)}`;
-        }
-
-        const confidence = Math.min(95, Math.max(70, 75 + Math.round((length + width) % 25)));
-        const riskLevels = ['Low', 'Medium', 'High'];
-        let riskIndex = 0;
-        if (width > 10.5) riskIndex = 1;
-        if (width > 11.5) riskIndex = 2;
-        const risk = riskLevels[riskIndex];
-
-        if (sizeOutput) sizeOutput.textContent = `Recommended Size: ${size}`;
-        if (confidenceOutput) confidenceOutput.textContent = `Confidence: ${confidence}%`;
-        if (returnOutput) returnOutput.textContent = `Return Risk: ${risk}`;
-
-        if (riskBadge) {
-          riskBadge.textContent = risk;
-          riskBadge.className = 'px-3 py-1 rounded-full text-xs font-semibold';
-          if (risk === 'Low') riskBadge.classList.add('bg-emerald-100', 'text-emerald-700');
-          else if (risk === 'Medium') riskBadge.classList.add('bg-amber-100', 'text-amber-700');
-          else riskBadge.classList.add('bg-rose-100', 'text-rose-700');
-        }
-
-        if (fitResult) {
-          fitResult.classList.remove('hidden');
-          fitResult.classList.add('show');
-          fitResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      });
-    }
-
-    // Contact form validation
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-      const emailInput = contactForm.querySelector('input[type="email"]');
-      const emailError = document.getElementById('email-error');
-      
-      contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        if (emailInput && emailError) {
-          const email = emailInput.value.trim();
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          
-          if (!email) {
-            emailError.textContent = 'Please enter your email address';
-            emailError.classList.remove('hidden');
-            emailInput.classList.add('border-rose-500');
-            emailInput.focus();
-            return;
-          }
-          
-          if (!emailRegex.test(email)) {
-            emailError.textContent = 'Please enter a valid email address';
-            emailError.classList.remove('hidden');
-            emailInput.classList.add('border-rose-500');
-            emailInput.focus();
-            return;
-          }
-          
-          // Success - in production, send to backend
-          emailError.classList.add('hidden');
-          emailInput.classList.remove('border-rose-500');
-          alert('Thank you! We\'ll notify you when we launch.');
-          contactForm.reset();
-        }
-      });
-      
-      if (emailInput) {
-        emailInput.addEventListener('input', () => {
-          if (emailError) {
-            emailError.classList.add('hidden');
-            emailInput.classList.remove('border-rose-500');
-          }
-        });
-      }
-    }
-
-    // 3D viewer swap with fallback
-    const mainViewer = document.getElementById('main-viewer');
-    const viewerFallback = document.getElementById('viewer-3d-fallback');
-    
-    if (mainViewer) {
-      document.querySelectorAll('.thumb-btn').forEach((btn, index) => {
-        btn.addEventListener('click', () => {
-          // Update aria-pressed
-          document.querySelectorAll('.thumb-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
-          btn.setAttribute('aria-pressed', 'true');
-          
-          const newSrc = btn.dataset.src;
-          if (mainViewer) {
-            mainViewer.classList.remove('fade-pulse');
-            void mainViewer.offsetWidth; // Force reflow
-            mainViewer.classList.add('fade-pulse');
-            mainViewer.setAttribute('src', newSrc);
-            
-            // Show fallback if model fails to load
-            setTimeout(() => {
-              if (mainViewer.modelStatus === 'failed' || !mainViewer.loaded) {
-                if (viewerFallback) {
-                  mainViewer.style.display = 'none';
-                  viewerFallback.classList.remove('hidden');
-                }
-              } else {
-                if (viewerFallback) {
-                  viewerFallback.classList.add('hidden');
-                  mainViewer.style.display = 'block';
-                }
-              }
-            }, 2000);
-          }
-        });
-      });
-    }
-
-    // Card hover micro-interaction (optimized with throttling)
-    let tiltTimeout;
-    document.querySelectorAll('.tilt-card').forEach(card => {
-      let isHovering = false;
-      
-      card.addEventListener('mouseenter', () => {
-        isHovering = true;
-      });
-      
-      card.addEventListener('mouseleave', () => {
-        isHovering = false;
-        card.style.transform = '';
-      });
-      
-      card.addEventListener('mousemove', (e) => {
-        if (!isHovering) return;
-        
-        clearTimeout(tiltTimeout);
-        tiltTimeout = setTimeout(() => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const rotateY = (x / rect.width - 0.5) * 8;
-          const rotateX = (y / rect.height - 0.5) * -8;
-          card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-        }, 16); // ~60fps
-      });
-    });
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>

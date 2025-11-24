@@ -1,12 +1,14 @@
 :root {
-  --accent: #10b981;
-  --accent-2: #06b6d4;
+  --accent: #8B5CF6;
+  --accent-2: #F97316;
 }
 
+/* Base body styles - will be overridden by light/dark mode specific styles */
 body {
-  background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08), transparent 35%),
-              radial-gradient(circle at 90% 10%, rgba(6, 182, 212, 0.08), transparent 30%),
+  background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08), transparent 35%),
+              radial-gradient(circle at 90% 10%, rgba(249, 115, 22, 0.08), transparent 30%),
               #f8fafc;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .btn-primary {
@@ -15,18 +17,18 @@ body {
   border: 0;
   border-radius: 9999px;
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary:hover {
   transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 12px 36px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 12px 36px rgba(249, 115, 22, 0.3);
 }
 
 .btn-primary:focus-visible,
 .btn-secondary:focus-visible {
-  outline: 2px solid rgba(16, 185, 129, 0.7);
+  outline: 2px solid rgba(139, 92, 246, 0.7);
   outline-offset: 2px;
 }
 
@@ -42,7 +44,7 @@ body {
 
 .btn-secondary:hover {
   transform: translateY(-1px);
-  border-color: rgba(16, 185, 129, 0.4);
+  border-color: rgba(139, 92, 246, 0.4);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
 }
 
@@ -110,13 +112,13 @@ body {
 
 .form-input:focus {
   outline: none;
-  border-color: rgba(16, 185, 129, 0.7);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  border-color: rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
   background: #fff;
 }
 
 .form-input:focus-visible {
-  outline: 2px solid rgba(16, 185, 129, 0.7);
+  outline: 2px solid rgba(139, 92, 246, 0.7);
   outline-offset: 2px;
 }
 
@@ -136,8 +138,8 @@ body {
 }
 
 .result-card {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.12));
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(249, 115, 22, 0.12));
+  border: 1px solid rgba(139, 92, 246, 0.25);
   border-radius: 1rem;
   padding: 1rem;
 }
@@ -153,8 +155,8 @@ body {
 
 .thumb-btn:hover {
   transform: translateY(-2px);
-  border-color: rgba(6, 182, 212, 0.5);
-  box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.2);
 }
 
 .bar-row {
@@ -199,7 +201,7 @@ body {
 
 .social-icon:hover {
   transform: translateY(-2px);
-  border-color: rgba(6, 182, 212, 0.5);
+  border-color: rgba(249, 115, 22, 0.5);
 }
 
 .fade-up {
@@ -242,6 +244,16 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
 }
 
 /* Performance optimizations */
@@ -289,3 +301,565 @@ body {
 .skip-link:focus {
   top: 0;
 }
+
+/* Dark Mode Styles - Using .dark class for Tailwind compatibility */
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: #334155;
+}
+
+/* Dark mode body - works when dark class is on html or body */
+html.dark body,
+body.dark {
+  background:               radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.12), transparent 35%),
+              radial-gradient(circle at 90% 10%, rgba(249, 115, 22, 0.12), transparent 30%),
+              #0f172a !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .card,
+html.dark .card,
+body.dark .card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .hero-card,
+html.dark .hero-card,
+body.dark .hero-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.7)) !important;
+  border-color: #334155 !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .hero-badge,
+html.dark .hero-badge,
+body.dark .hero-badge {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border-color: #334155 !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .form-input,
+html.dark .form-input,
+body.dark .form-input {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .form-input:focus,
+html.dark .form-input:focus,
+body.dark .form-input:focus {
+  background: #1e293b !important;
+  border-color: rgba(139, 92, 246, 0.7) !important;
+}
+
+.dark .btn-secondary,
+html.dark .btn-secondary,
+body.dark .btn-secondary {
+  background: #1e293b !important;
+  color: var(--text-primary) !important;
+  border-color: #334155 !important;
+}
+
+.dark .btn-secondary:hover,
+html.dark .btn-secondary:hover,
+body.dark .btn-secondary:hover {
+  background: #334155 !important;
+  border-color: rgba(139, 92, 246, 0.4) !important;
+}
+
+.dark .thumb-btn,
+html.dark .thumb-btn,
+body.dark .thumb-btn {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .thumb-btn:hover,
+html.dark .thumb-btn:hover,
+body.dark .thumb-btn:hover {
+  background: #334155 !important;
+  border-color: rgba(6, 182, 212, 0.5) !important;
+}
+
+.dark .social-icon,
+html.dark .social-icon,
+body.dark .social-icon {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .social-icon:hover,
+html.dark .social-icon:hover,
+body.dark .social-icon:hover {
+  background: #334155 !important;
+  border-color: rgba(6, 182, 212, 0.5) !important;
+}
+
+.dark header,
+html.dark header,
+body.dark header {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-color: #334155 !important;
+}
+
+/* Fixed navbar height */
+header {
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+}
+
+header nav {
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Light mode header - ensure it's more opaque */
+html:not(.dark) header,
+body:not(.dark) header {
+  background: rgba(248, 250, 252, 0.95) !important;
+  border-color: #e2e8f0 !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Dark mode header - enhanced blur */
+html.dark header,
+body.dark header {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+header a[href="#home"] {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  max-height: 80px !important;
+}
+
+
+/* Logo and brand name sizing */
+header a[href="#home"] img {
+  height: 5rem !important; /* 56px - balanced logo size */
+  width: auto;
+  object-fit: contain !important;
+}
+
+header a[href="#home"] span {
+  font-size: 1.5rem !important; /* Balanced text size */
+  font-weight: 700 !important;
+  margin-left: -0.25rem !important;
+  color: #0f172a !important; /* Light mode color */
+}
+
+html.dark header a[href="#home"] span,
+body.dark header a[href="#home"] span {
+  color: #f1f5f9 !important; /* Dark mode color */
+}
+
+footer a img,
+footer img {
+  height: 5rem !important; /* Larger footer logo */
+  width: auto;
+}
+
+footer span {
+  font-size: 1.5rem !important; /* Larger footer text */
+  font-weight: 700 !important;
+  margin-left: -1rem !important;
+  color: #0f172a !important; /* Light mode color */
+}
+
+html.dark footer span,
+body.dark footer span {
+  color: #f1f5f9 !important; /* Dark mode color */
+}
+
+.dark .bar,
+html.dark .bar,
+body.dark .bar {
+  background: #334155 !important;
+}
+
+.dark .bar-row,
+html.dark .bar-row,
+body.dark .bar-row {
+  color: #f1f5f9 !important;
+}
+
+.dark .bar-row .value,
+html.dark .bar-row .value,
+body.dark .bar-row .value {
+  color: #f1f5f9 !important;
+}
+
+/* Dark mode modal styles */
+.dark #product-modal > div {
+  background: #1e293b;
+  color: var(--text-primary);
+}
+
+.dark #product-modal .border-slate-100 {
+  border-color: #334155;
+}
+
+.dark #auth-modal > div {
+  background: #1e293b;
+  color: var(--text-primary);
+}
+
+/* Dark mode mobile menu */
+.dark #mobile-menu > div {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Ensure modal category badges are styled in dark mode */
+.dark #modal-category,
+.dark #modal-rating {
+  background: #334155;
+  color: var(--text-primary);
+}
+
+/* Light mode defaults - ensure proper colors when not in dark mode */
+body:not(.dark),
+html:not(.dark) body {
+  background:               radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08), transparent 35%),
+              radial-gradient(circle at 90% 10%, rgba(249, 115, 22, 0.08), transparent 30%),
+              #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Light mode specific styles - ensure they override Tailwind when not in dark mode */
+html:not(.dark) .card,
+body:not(.dark) .card {
+  background: #fff !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .hero-card,
+body:not(.dark) .hero-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.55)) !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .hero-badge,
+body:not(.dark) .hero-badge {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .form-input,
+body:not(.dark) .form-input {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .form-input:focus,
+body:not(.dark) .form-input:focus {
+  background: #fff !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .btn-secondary,
+body:not(.dark) .btn-secondary {
+  background: #fff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+html:not(.dark) .thumb-btn,
+body:not(.dark) .thumb-btn {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .social-icon,
+body:not(.dark) .social-icon {
+  background: #fff !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .bar-row,
+body:not(.dark) .bar-row {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .bar-row .value,
+body:not(.dark) .bar-row .value {
+  color: #0f172a !important;
+}
+
+/* Auth Modal Centering */
+#auth-modal:not(.hidden) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+#auth-modal > div {
+  animation: slideUp 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Additional Dark Mode Enhancements */
+.dark .result-card {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(249, 115, 22, 0.15));
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Ensure nav links are visible in dark mode */
+.dark .nav-link,
+html.dark .nav-link,
+body.dark .nav-link {
+  color: #cbd5e1 !important;
+}
+
+.dark .nav-link:hover,
+html.dark .nav-link:hover,
+body.dark .nav-link:hover {
+  color: #8B5CF6 !important;
+}
+
+/* Ensure nav links are visible in light mode */
+html:not(.dark) .nav-link,
+body:not(.dark) .nav-link {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .nav-link:hover,
+body:not(.dark) .nav-link:hover {
+  color: #8B5CF6 !important;
+}
+
+/* Product modal in dark mode */
+.dark #product-modal img {
+  border-color: #334155;
+}
+
+/* Icon circles in dark mode for steps */
+.dark .icon-circle {
+  color: inherit;
+}
+
+/* Ensure text visibility in dark cards */
+.dark .card h3 {
+  color: #f1f5f9;
+}
+
+.dark .card p {
+  color: #cbd5e1;
+}
+
+/* Ensure all headings are visible in dark mode */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6 {
+  color: #f1f5f9 !important;
+}
+
+/* Ensure paragraph text is visible in dark mode */
+.dark p,
+html.dark p,
+body.dark p {
+  color: #cbd5e1 !important;
+}
+
+/* Ensure headings and paragraphs are visible in light mode */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6,
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) h6 {
+  color: #0f172a !important;
+}
+
+html:not(.dark) p,
+body:not(.dark) p {
+  color: #475569 !important;
+}
+
+/* Dark mode for confidence dashboard card - keep it dark even in light mode */
+.card.bg-gradient-to-br.from-slate-900.to-slate-800 {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+  color: white !important;
+}
+
+.dark .card.bg-gradient-to-br.from-slate-900.to-slate-800 {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+}
+
+/* Ensure modal close button is visible in dark mode */
+.dark #modal-close,
+.dark #close-auth-modal {
+  color: #f1f5f9;
+}
+
+/* Footer in dark mode */
+.dark footer,
+html.dark footer,
+body.dark footer {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+/* Footer in light mode */
+html:not(.dark) footer,
+body:not(.dark) footer {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Light mode sections - ensure shop, viewer, and contact sections are light */
+html:not(.dark) #shop,
+body:not(.dark) #shop,
+html:not(.dark) #viewer,
+body:not(.dark) #viewer,
+html:not(.dark) #contact,
+body:not(.dark) #contact {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Ensure headings in light mode sections are visible */
+html:not(.dark) #shop h2,
+html:not(.dark) #shop h3,
+body:not(.dark) #shop h2,
+body:not(.dark) #shop h3,
+html:not(.dark) #viewer h2,
+html:not(.dark) #viewer h3,
+body:not(.dark) #viewer h2,
+body:not(.dark) #viewer h3,
+html:not(.dark) #contact h2,
+html:not(.dark) #contact h3,
+body:not(.dark) #contact h2,
+body:not(.dark) #contact h3 {
+  color: #0f172a !important;
+}
+
+/* Ensure paragraphs in light mode sections are visible */
+html:not(.dark) #shop p,
+body:not(.dark) #shop p,
+html:not(.dark) #viewer p,
+body:not(.dark) #viewer p,
+html:not(.dark) #contact p,
+body:not(.dark) #contact p {
+  color: #475569 !important;
+}
+
+/* Dark mode sections */
+html.dark #shop,
+body.dark #shop,
+html.dark #viewer,
+body.dark #viewer,
+html.dark #contact,
+body.dark #contact {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+/* 3D Model Loading Spinner */
+.loading-spinner {
+  width: 80px;
+  height: 80px;
+  border: 4px solid rgba(139, 92, 246, 0.1);
+  border-top-color: #8B5CF6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-spinner-lg {
+  width: 100px;
+  height: 100px;
+  border-width: 5px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.loading-container .loading-text {
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+
+/* Dark mode loading spinner */
+.dark .loading-spinner {
+  border-color: rgba(139, 92, 246, 0.2);
+  border-top-color: #8B5CF6;
+}
+
+/* Loading dots animation */
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8B5CF6;
+  animation: pulse-scale 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
