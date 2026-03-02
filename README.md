@@ -101,3 +101,7 @@ Use `QA_CHECKLIST.md` for submission testing evidence.
 - `/terms`
 - `/returns`
 - `/admin/*` (admin only)
+
+## ML + API + AR Demo
+
+For the complete end-to-end setup (training, API, frontend run, and evidence outputs), see `RUNBOOK.md`.

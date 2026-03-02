@@ -8,6 +8,12 @@ import {
 } from '../data/sizeChart';
 import { useAuth } from '../context/AuthContext';
 import { useSite } from '../context/SiteContext';
+import {
+  normalizeCategoryForApi,
+  normalizeGenderForApi,
+  normalizePreferredFitForApi,
+  requestFitPrediction,
+} from '../lib/fitPredictApi';
 import { getUserMeasurements, saveUserMeasurements } from '../services/firestoreProfile';
 
 const emptyMeasurements = {
@@ -49,6 +55,9 @@ export default function FitAssurancePage() {
   const [statusMessage, setStatusMessage] = useState('');
   const [statusError, setStatusError] = useState('');
   const [savingMeasurements, setSavingMeasurements] = useState(false);
+  const [apiRecommendation, setApiRecommendation] = useState(null);
+  const [apiRecommendationLoading, setApiRecommendationLoading] = useState(false);
+  const [apiRecommendationError, setApiRecommendationError] = useState('');
 
   useEffect(() => {
     setMeasurementForm(normalizeMeasurementForm(measurements));
@@ -150,7 +159,7 @@ export default function FitAssurancePage() {
     [selectedGender, selectedSystem, selectedWidthLabel, sizeChartRows],
   );
 
-  const recommendation = useMemo(() => {
+  const chartRecommendation = useMemo(() => {
     if (!hasMeasurements(measurements) || sizeChartRows.length === 0) return null;
 
     const measuredLength = Number(measurements.length);
@@ -227,6 +236,69 @@ export default function FitAssurancePage() {
       ],
     };
   }, [measurements, sizeChartRows]);
+
+  useEffect(() => {
+    if (!hasMeasurements(measurements)) {
+      setApiRecommendation(null);
+      setApiRecommendationError('');
+      setApiRecommendationLoading(false);
+      return;
+    }
+
+    const footLengthCm = Number(measurements?.length);
+    const footWidthCm = Number(measurements?.width);
+
+    if (!Number.isFinite(footLengthCm) || footLengthCm < 10 || footLengthCm > 40) {
+      setApiRecommendation(null);
+      setApiRecommendationLoading(false);
+      setApiRecommendationError('Foot length must be between 10 and 40 cm to run ML prediction.');
+      return;
+    }
+
+    if (!Number.isFinite(footWidthCm) || footWidthCm < 5 || footWidthCm > 20) {
+      setApiRecommendation(null);
+      setApiRecommendationLoading(false);
+      setApiRecommendationError('Foot width must be between 5 and 20 cm to run ML prediction.');
+      return;
+    }
+
+    let active = true;
+    setApiRecommendationLoading(true);
+    setApiRecommendationError('');
+
+    requestFitPrediction({
+      gender: normalizeGenderForApi(measurements?.gender),
+      footLengthCm,
+      footWidthCm,
+      category: normalizeCategoryForApi(measurements?.category || 'Running'),
+      preferredFit: normalizePreferredFitForApi(measurements?.preferredFit),
+    })
+      .then((result) => {
+        if (!active) return;
+        setApiRecommendation(result);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setApiRecommendation(null);
+        setApiRecommendationError(
+          error?.message ||
+            'Unable to reach Fit API at http://localhost:8000/predict. Start the API server and try again.',
+        );
+      })
+      .finally(() => {
+        if (!active) return;
+        setApiRecommendationLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [measurements]);
+
+  const apiConfidencePercent = apiRecommendation
+    ? clamp(Math.round(apiRecommendation.confidence * 100), 0, 100)
+    : null;
+  const apiCategory = normalizeCategoryForApi(measurements?.category || 'Running');
 
   const saveMeasurementDetails = async (event) => {
     event.preventDefault();
@@ -505,36 +577,66 @@ export default function FitAssurancePage() {
       <section className="panel space-y-4">
         <h2 className="text-2xl font-bold">Fit Recommendations</h2>
 
-        {!recommendation ? (
+        {!hasMeasurements(measurements) ? (
           <p className="text-sm text-slate-600 dark:text-slate-300">
             Add measurements to generate size recommendations and confidence.
           </p>
+        ) : apiRecommendationLoading ? (
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Getting ML prediction from the Fit API...
+          </p>
+        ) : apiRecommendationError ? (
+          <p className="text-sm text-rose-600">
+            ML prediction unavailable: {apiRecommendationError}
+          </p>
+        ) : !apiRecommendation ? (
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            No recommendation available yet.
+          </p>
         ) : (
           <>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-xl border border-slate-200 p-3 dark:border-slate-800">
                 <p className="label">Recommended UK</p>
-                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{recommendation.uk}</p>
+                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                  {apiRecommendation.recommendedSizeUK || '-'}
+                </p>
               </div>
               <div className="rounded-xl border border-slate-200 p-3 dark:border-slate-800">
                 <p className="label">Recommended US</p>
-                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{recommendation.us}</p>
+                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                  {chartRecommendation?.us || '-'}
+                </p>
               </div>
               <div className="rounded-xl border border-slate-200 p-3 dark:border-slate-800">
                 <p className="label">Recommended EU</p>
-                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">{recommendation.eu}</p>
+                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                  {chartRecommendation?.eu || '-'}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-200 p-3 dark:border-slate-800">
+                <p className="label">Return Risk</p>
+                <p className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                  {apiRecommendation.riskLevel}
+                </p>
               </div>
             </div>
 
             <div className="rounded-xl border border-slate-200 p-3 dark:border-slate-800">
               <p className="label">Confidence</p>
-              <p className="text-xl font-bold text-cyan-700 dark:text-cyan-300">{recommendation.confidence}%</p>
+              <p className="text-xl font-bold text-cyan-700 dark:text-cyan-300">
+                {apiConfidencePercent ?? 0}%
+              </p>
             </div>
 
             <div>
               <p className="mb-2 text-sm font-semibold text-slate-800 dark:text-slate-200">Why this size</p>
               <ul className="list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-slate-300">
-                {recommendation.reasons.map((reason) => (
+                {[
+                  `ML model prediction on category "${apiCategory}" returned UK ${apiRecommendation.recommendedSizeUK}.`,
+                  `Model confidence is ${apiConfidencePercent ?? 0}% with ${apiRecommendation.riskLevel} return risk.`,
+                  ...(chartRecommendation?.reasons || []),
+                ].map((reason) => (
                   <li key={reason}>{reason}</li>
                 ))}
               </ul>
