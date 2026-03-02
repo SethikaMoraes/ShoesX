@@ -1,0 +1,11 @@
+﻿node_modules/
+dist/
+.vite/
+*.log
+*.tmp
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+ml_artifacts/model.pkl
